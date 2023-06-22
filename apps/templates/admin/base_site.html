@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+<link href="{% static 'images/favicon.ico' %}" rel="shortcut icon">
+{% endblock extrahead %}
+
+{% block branding %}
+<h1 id="head">
+    <a href="{% url 'admin:index' %}">
+        <img src="{% static 'images/logo.svg' %}" class="brand_img" height="35">
+        <span class="brand_text">RHManager: Painel administrativo</span>
+    </a>
+</h1>
+{% endblock branding %}

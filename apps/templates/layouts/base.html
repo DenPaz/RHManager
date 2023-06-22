@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title> RHManager | {% block title %}{% endblock %} </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="icon" type="image/ico" href="{% static 'images/favicon.ico' %}">
+    <link type="text/css" href="{% static 'css/volt.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/notyf/notyf.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/fullcalendar/main.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/apexcharts/dist/apexcharts.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/dropzone/dist/min/dropzone.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/choices.js/public/assets/styles/choices.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/leaflet/dist/leaflet.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'vendor/@fortawesome/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'app_assets/jquery/css/jquery-confirm.min.css' %}" rel="stylesheet">
+
+    {% block stylesheets %}
+    {% endblock stylesheets %}
+</head>
+
+<body>
+    {% include 'includes/sidebar.html' %}
+
+    <main class="content">
+        {% include 'includes/navbar.html' %}
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4 mb-2">
+            <div class="d-block mb-4 mb-md-0">
+                <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+                    <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'dashboard:index' %}">
+                                <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                    </path>
+                                </svg>
+                            </a>
+                        </li>
+
+                        {% block breadcrumb %}
+                        {% endblock breadcrumb %}
+                    </ol>
+                </nav>
+
+                {% block page_description %}
+                {% endblock page_description %}
+            </div>
+
+            {% block buttons %}
+            {% endblock buttons %}
+        </div>
+
+        {% block content %}
+        {% endblock content %}
+
+        {% include 'includes/footer.html' %}
+    </main>
+
+    {% include 'includes/scripts.html' %}
+
+    {% block javascripts %}
+    {% endblock javascripts %}
+</body>
+
+</html>
