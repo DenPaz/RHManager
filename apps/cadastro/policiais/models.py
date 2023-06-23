@@ -413,7 +413,7 @@ class FormacaoComplementar(TimeStampedModel):
 
     class Meta:
         verbose_name = "Formação Complementar"
-        verbose_name_plural = "Formações Complementar"
+        verbose_name_plural = "Formação Complementar"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
