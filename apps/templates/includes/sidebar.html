@@ -100,7 +100,7 @@
                         </svg>
                     </span>
                 </span>
-                <div class="multi-level collapse {% if 'cadastro:policiais' in segment or 'cadastro:extras' in segment %} show {% endif %}"
+                <div class="multi-level collapse {% if 'cadastro:policiais' in segment or 'cadastro:complementos' in segment %} show {% endif %}"
                     role="list" id="submenu-cadastro" aria-expanded="false">
                     <ul class="flex-column nav">
                         <li class="nav-item {% if 'cadastro:policiais' in segment %} active {% endif %}">
@@ -109,10 +109,10 @@
                                 <span class="sidebar-text"> Policiais </span>
                             </a>
                         </li>
-                        <li class="nav-item {% if 'cadastro:extras' in segment %} active {% endif %}">
+                        <li class="nav-item {% if 'cadastro:complementos' in segment %} active {% endif %}">
                             <a href="" class="nav-link">
                                 <span class="sidebar-text-contracted"> E </span>
-                                <span class="sidebar-text"> Extras </span>
+                                <span class="sidebar-text"> Complementos </span>
                             </a>
                         </li>
                     </ul>

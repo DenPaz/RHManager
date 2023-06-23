@@ -30,7 +30,7 @@ rm -rf apps/cadastro/policiais/__pycache__
 rm -rf apps/cadastro/policiais/migrations/__pycache__
 rm -rf apps/cadastro/policiais/migrations/0*
 
-# Clearing apps.cadastro.extras cache
-rm -rf apps/cadastro/extras/__pycache__
-rm -rf apps/cadastro/extras/migrations/__pycache__
-rm -rf apps/cadastro/extras/migrations/0*
+# Clearing apps.cadastro.complementos cache
+rm -rf apps/cadastro/complementos/__pycache__
+rm -rf apps/cadastro/complementos/migrations/__pycache__
+rm -rf apps/cadastro/complementos/migrations/0*

@@ -5,7 +5,7 @@ from django.views import View
 class DadoComplementarView(LoginRequiredMixin, View):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["segment"] = "cadastro:extras"
+        context["segment"] = "cadastro:dados"
         return context
 
 

@@ -6,15 +6,11 @@ class Genero(models.TextChoices):
     FEMININO = "F", "Feminino"
 
 
-class TipoSanguineo(models.TextChoices):
-    A_POSITIVO = "A+", "A+"
-    A_NEGATIVO = "A-", "A-"
-    B_POSITIVO = "B+", "B+"
-    B_NEGATIVO = "B-", "B-"
-    AB_POSITIVO = "AB+", "AB+"
-    AB_NEGATIVO = "AB-", "AB-"
-    O_POSITIVO = "O+", "O+"
-    O_NEGATIVO = "O-", "O-"
+class Comportamento(models.TextChoices):
+    EXCEPCIONAL = "EXCEPCIONAL", "Excepcional"
+    OTIMO = "OTIMO", "Ótimo"
+    BOM = "BOM", "Bom"
+    RUIM = "RUIM", "Ruim"
 
 
 class Estado(models.TextChoices):
@@ -47,7 +43,18 @@ class Estado(models.TextChoices):
     TO = "TO", "Tocantins"
 
 
-class TipoTrabalhoAnterior(models.TextChoices):
+class TipoSanguineo(models.TextChoices):
+    A_POSITIVO = "A+", "A+"
+    A_NEGATIVO = "A-", "A-"
+    B_POSITIVO = "B+", "B+"
+    B_NEGATIVO = "B-", "B-"
+    AB_POSITIVO = "AB+", "AB+"
+    AB_NEGATIVO = "AB-", "AB-"
+    O_POSITIVO = "O+", "O+"
+    O_NEGATIVO = "O-", "O-"
+
+
+class TipoServicoAnterior(models.TextChoices):
     NENHUM = 0, "Nenhum"
     PRIVADO = 1, "Privado"
     MILITAR_FEDERAL = 2, "Militar Federal"
@@ -55,10 +62,3 @@ class TipoTrabalhoAnterior(models.TextChoices):
     PUBLICO_SC_MILITAR = 4, "Público em SC (militar)"
     PUBLICO_OUTRO = 5, "Público em outro estado (não militar)"
     PUBLICO_OUTRO_MILITAR = (6, "Público em outros estados (militar)")
-
-
-class Comportamento(models.TextChoices):
-    EXCEPCIONAL = "EXCEPCIONAL", "Excepcional"
-    OTIMO = "OTIMO", "Ótimo"
-    BOM = "BOM", "Bom"
-    RUIM = "RUIM", "Ruim"

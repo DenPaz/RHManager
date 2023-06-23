@@ -6,14 +6,7 @@ from django.utils import timezone
 from model_utils.fields import UUIDField
 from model_utils.models import TimeStampedModel
 
-from ..constants import (
-    Comportamento,
-    Estado,
-    Genero,
-    TipoSanguineo,
-    TipoTrabalhoAnterior,
-)
-from ..extras.models import (
+from ..complementos.models import (
     Afastamento,
     Curso,
     CursoCivil,
@@ -22,11 +15,18 @@ from ..extras.models import (
     LinguaEstrangeira,
     Restricao,
 )
+from ..constants import (
+    Comportamento,
+    Estado,
+    Genero,
+    TipoSanguineo,
+    TipoServicoAnterior,
+)
 from ..utils import get_capitalized_words
 from ..validators import ValidateFillZeros, ValidateOnlyNumbers
 
 
-class Registro(TimeStampedModel):
+class RegistroInicial(TimeStampedModel):
     id = UUIDField(
         primary_key=True,
         editable=False,
@@ -61,17 +61,19 @@ class Registro(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Registro"
-        verbose_name_plural = "Registros"
+        verbose_name = "Registro Inicial"
+        verbose_name_plural = "Registros Iniciais"
         ordering = ["nome", "sobrenome"]
 
     def __str__(self):
         return f"{self.nome} {self.sobrenome} ({self.matricula})"
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
+    def clean(self):
         self.nome = get_capitalized_words(self.nome)
         self.sobrenome = get_capitalized_words(self.sobrenome)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
         super().save(*args, **kwargs)
 
     @property
@@ -85,7 +87,7 @@ class Registro(TimeStampedModel):
 
 class DadosPessoais(TimeStampedModel):
     policial = models.OneToOneField(
-        Registro,
+        RegistroInicial,
         on_delete=models.CASCADE,
         primary_key=True,
         verbose_name="Policial",
@@ -156,13 +158,15 @@ class DadosPessoais(TimeStampedModel):
     def __str__(self):
         return f"{self.policial.__str__()}"
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
+    def clean(self):
         self.nome_guerra = get_capitalized_words(self.nome_guerra)
         self.endereco_logradouro = get_capitalized_words(self.endereco_logradouro)
         self.endereco_bairro = get_capitalized_words(self.endereco_bairro)
         self.endereco_cidade = get_capitalized_words(self.endereco_cidade)
         self.email = self.email.lower()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
         super().save(*args, **kwargs)
 
     @property
@@ -190,7 +194,7 @@ class DadosPessoais(TimeStampedModel):
 
 class DadosProfissionais(TimeStampedModel):
     policial = models.OneToOneField(
-        Registro,
+        RegistroInicial,
         on_delete=models.CASCADE,
         primary_key=True,
         verbose_name="Policial",
@@ -300,9 +304,11 @@ class DadosProfissionais(TimeStampedModel):
     def __str__(self):
         return f"{self.policial.__str__()}"
 
+    def clean(self):
+        self.lotacao_cidade = get_capitalized_words(self.lotacao_cidade)
+
     def save(self, *args, **kwargs):
         self.full_clean()
-        self.lotacao_cidade = get_capitalized_words(self.lotacao_cidade)
         super().save(*args, **kwargs)
 
     @property
@@ -341,51 +347,56 @@ class DadosProfissionais(TimeStampedModel):
     def aposentadoria(self):
         data_hoje = timezone.now().date()
         data_ingresso = self.data_ingresso
+        data_aposentadoria = None
+        servicos_anteriores = self.policial.servicoanterior_set.all()
 
         if data_ingresso >= date(2022, 1, 1):
-            for trabalho_anterior in self.policial.trabalhoanterior_set.all():
-                if trabalho_anterior.label == TipoTrabalhoAnterior.NENHUM:
-                    return data_ingresso + relativedelta(years=35)
+            for servico_anterior in servicos_anteriores:
+                if servico_anterior.tipo == TipoServicoAnterior.NENHUM:
+                    data_aposentadoria = data_ingresso + relativedelta(years=35)
+                    return data_aposentadoria
 
 
-class TrabalhoAnterior(models.Model):
+class ServicoAnterior(models.Model):
     policial = models.ForeignKey(
-        Registro,
+        RegistroInicial,
         on_delete=models.CASCADE,
         verbose_name="Policial",
     )
-    label = models.CharField(
+    tipo = models.CharField(
         max_length=50,
-        choices=TipoTrabalhoAnterior.choices,
-        default=TipoTrabalhoAnterior.NENHUM,
-        verbose_name="Tipo de trabalho anterior",
+        choices=TipoServicoAnterior.choices,
+        default=TipoServicoAnterior.NENHUM,
+        verbose_name="Tipo de serviço anterior",
     )
     tempo = models.PositiveSmallIntegerField(
         default=0,
-        verbose_name="Tempo de serviço no trabalho anterior (em dias)",
+        verbose_name="Tempo de serviço anterior (dias)",
     )
 
     class Meta:
-        verbose_name = "Trabalho Anterior"
-        verbose_name_plural = "Trabalhos Anteriores"
+        verbose_name = "Serviço Anterior"
+        verbose_name_plural = "Serviços Anteriores"
         ordering = ["policial__nome", "policial__sobrenome"]
-        unique_together = ("label", "policial")
+        unique_together = ("tipo", "policial")
 
     def __str__(self):
         return (
-            f"{self.policial.__str__()}: {self.get_label_display()} ({self.tempo} dias)"
+            f"{self.policial.__str__()}: {self.get_tipo_display()} ({self.tempo} dias)"
         )
+
+    def clean(self):
+        if self.tipo == TipoServicoAnterior.NENHUM:
+            self.tempo = 0
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        if self.label == TipoTrabalhoAnterior.NENHUM:
-            self.tempo = 0
         super().save(*args, **kwargs)
 
 
 class FormacaoComplementar(TimeStampedModel):
     policial = models.OneToOneField(
-        Registro,
+        RegistroInicial,
         on_delete=models.CASCADE,
         primary_key=True,
         verbose_name="Policial",
@@ -413,7 +424,7 @@ class FormacaoComplementar(TimeStampedModel):
 
     class Meta:
         verbose_name = "Formação Complementar"
-        verbose_name_plural = "Formação Complementar"
+        verbose_name_plural = "Formações Complementares"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):

@@ -57,8 +57,8 @@ LOCAL_APPS = [
     "apps.authentication.config.AuthenticationConfig",
     "apps.dashboard.config.DashboardConfig",
     "apps.cadastro.config.CadastroConfig",
-    "apps.cadastro.extras.config.ExtrasConfig",
     "apps.cadastro.policiais.config.PoliciaisConfig",
+    "apps.cadastro.complementos.config.ComplementosConfig",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

@@ -1,6 +1,4 @@
 from django.contrib import admin
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 from import_export.admin import ImportExportModelAdmin
 
 from .models import (

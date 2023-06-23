@@ -5,14 +5,14 @@ from .models import (
     DadosPessoais,
     DadosProfissionais,
     FormacaoComplementar,
-    Registro,
-    TrabalhoAnterior,
+    RegistroInicial,
+    ServicoAnterior,
 )
-from .resources import RegistroResource
+from .resources import PolicialResource
 
 
-@admin.register(Registro)
-class RegistroAdmin(ImportExportModelAdmin):
+@admin.register(RegistroInicial)
+class PolicialAdmin(ImportExportModelAdmin):
     list_display = (
         "matricula",
         "nome",
@@ -36,17 +36,17 @@ class RegistroAdmin(ImportExportModelAdmin):
         "sobrenome",
     )
     list_per_page = 10
-    resource_class = RegistroResource
+    resource_class = PolicialResource
 
 
 admin.site.register(DadosPessoais)
 admin.site.register(FormacaoComplementar)
 # admin.site.register(DadosProfissionais)
-admin.site.register(TrabalhoAnterior)
+admin.site.register(ServicoAnterior)
 
 
 @admin.register(DadosProfissionais)
-class DadosProfissionaisAdmin(admin.ModelAdmin):
+class PolicialDadosProfissionaisAdmin(admin.ModelAdmin):
     list_display = (
         "__str__",
         "aposentadoria",
