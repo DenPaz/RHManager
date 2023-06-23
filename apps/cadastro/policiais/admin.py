@@ -6,7 +6,7 @@ from .models import (
     DadosProfissionais,
     FormacaoComplementar,
     RegistroInicial,
-    ServicoAnterior,
+    TrabalhoAnterior,
 )
 from .resources import PolicialResource
 
@@ -42,7 +42,7 @@ class PolicialAdmin(ImportExportModelAdmin):
 admin.site.register(DadosPessoais)
 admin.site.register(FormacaoComplementar)
 # admin.site.register(DadosProfissionais)
-admin.site.register(ServicoAnterior)
+admin.site.register(TrabalhoAnterior)
 
 
 @admin.register(DadosProfissionais)

@@ -65,6 +65,10 @@ class User(AbstractUser):
         if self.is_superuser and not self.is_staff:
             raise ValidationError("Superusuários devem ser também membros da equipe.")
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     def get_full_name(self):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"

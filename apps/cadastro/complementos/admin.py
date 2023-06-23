@@ -2,22 +2,22 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
 from .models import (
-    Afastamento,
     Curso,
     CursoCivil,
     CursoPM,
     FormacaoAcademica,
     LinguaEstrangeira,
-    Restricao,
+    TipoAfastamento,
+    TipoRestricao,
 )
 from .resources import (
-    AfastamentoResource,
     CursoCivilResource,
     CursoPMResource,
     CursoResource,
     FormacaoAcademicaResource,
     LinguaEstrangeiraResource,
-    RestricaoResource,
+    TipoAfastamentoResource,
+    TipoRestricaoResource,
 )
 
 
@@ -32,9 +32,9 @@ class DadoComplementarAdmin(ImportExportModelAdmin):
         abstract = True
 
 
-@admin.register(Afastamento)
-class AfastamentoAdmin(DadoComplementarAdmin):
-    resource_class = AfastamentoResource
+@admin.register(TipoAfastamento)
+class TipoAfastamentoAdmin(DadoComplementarAdmin):
+    resource_class = TipoAfastamentoResource
 
 
 @admin.register(Curso)
@@ -62,6 +62,6 @@ class LinguaEstrangeiraAdmin(DadoComplementarAdmin):
     resource_class = LinguaEstrangeiraResource
 
 
-@admin.register(Restricao)
-class RestricaoAdmin(DadoComplementarAdmin):
-    resource_class = RestricaoResource
+@admin.register(TipoRestricao)
+class TipoRestricaoAdmin(DadoComplementarAdmin):
+    resource_class = TipoRestricaoResource

@@ -2,13 +2,13 @@ from import_export import resources
 
 from ..utils import get_capitalized_words
 from .models import (
-    Afastamento,
     Curso,
     CursoCivil,
     CursoPM,
     FormacaoAcademica,
     LinguaEstrangeira,
-    Restricao,
+    TipoAfastamento,
+    TipoRestricao,
 )
 
 
@@ -26,9 +26,9 @@ class DadoComplementarResource(resources.ModelResource):
             kwargs["skip_row"] = True
 
 
-class AfastamentoResource(DadoComplementarResource):
+class TipoAfastamentoResource(DadoComplementarResource):
     class Meta(DadoComplementarResource.Meta):
-        model = Afastamento
+        model = TipoAfastamento
 
 
 class CursoResource(DadoComplementarResource):
@@ -56,6 +56,6 @@ class LinguaEstrangeiraResource(DadoComplementarResource):
         model = LinguaEstrangeira
 
 
-class RestricaoResource(DadoComplementarResource):
+class TipoRestricaoResource(DadoComplementarResource):
     class Meta(DadoComplementarResource.Meta):
-        model = Restricao
+        model = TipoRestricao

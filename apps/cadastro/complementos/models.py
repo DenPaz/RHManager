@@ -24,6 +24,7 @@ class DadoComplementar(models.Model):
         return f"{self.label}"
 
     def clean(self):
+        super().clean()
         self.label = get_capitalized_words(self.label)
 
     def save(self, *args, **kwargs):
@@ -33,8 +34,8 @@ class DadoComplementar(models.Model):
 
 class FormacaoAcademica(DadoComplementar):
     class Meta:
-        verbose_name = "Formação Acadêmica"
-        verbose_name_plural = "Formações Acadêmicas"
+        verbose_name = "Formação acadêmica"
+        verbose_name_plural = "Formação acadêmica"
 
 
 class Curso(DadoComplementar):
@@ -51,23 +52,23 @@ class CursoPM(DadoComplementar):
 
 class CursoCivil(DadoComplementar):
     class Meta:
-        verbose_name = "Curso Civil"
-        verbose_name_plural = "Cursos Civis"
+        verbose_name = "Curso civil"
+        verbose_name_plural = "Cursos civis"
 
 
 class LinguaEstrangeira(DadoComplementar):
     class Meta:
-        verbose_name = "Língua Estrangeira"
-        verbose_name_plural = "Línguas Estrangeiras"
+        verbose_name = "Língua estrangeira"
+        verbose_name_plural = "Línguas estrangeiras"
 
 
-class Afastamento(DadoComplementar):
+class TipoAfastamento(DadoComplementar):
     class Meta:
-        verbose_name = "Tipo de Afastamento"
-        verbose_name_plural = "Tipos de Afastamentos"
+        verbose_name = "Tipo de afastamento"
+        verbose_name_plural = "Tipos de afastamentos"
 
 
-class Restricao(DadoComplementar):
+class TipoRestricao(DadoComplementar):
     class Meta:
-        verbose_name = "Tipo de Restrição"
-        verbose_name_plural = "Tipos de Restrições"
+        verbose_name = "Tipo de restrição"
+        verbose_name_plural = "Tipos de restrições"

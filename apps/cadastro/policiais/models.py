@@ -7,20 +7,20 @@ from model_utils.fields import UUIDField
 from model_utils.models import TimeStampedModel
 
 from ..complementos.models import (
-    Afastamento,
     Curso,
     CursoCivil,
     CursoPM,
     FormacaoAcademica,
     LinguaEstrangeira,
-    Restricao,
+    TipoAfastamento,
+    TipoRestricao,
 )
 from ..constants import (
     Comportamento,
     Estado,
     Genero,
     TipoSanguineo,
-    TipoServicoAnterior,
+    TipoTrabalhoAnterior,
 )
 from ..utils import get_capitalized_words
 from ..validators import ValidateFillZeros, ValidateOnlyNumbers
@@ -61,14 +61,15 @@ class RegistroInicial(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Registro Inicial"
-        verbose_name_plural = "Registros Iniciais"
+        verbose_name = "Registro inicial"
+        verbose_name_plural = "Registros iniciais"
         ordering = ["nome", "sobrenome"]
 
     def __str__(self):
         return f"{self.nome} {self.sobrenome} ({self.matricula})"
 
     def clean(self):
+        super().clean()
         self.nome = get_capitalized_words(self.nome)
         self.sobrenome = get_capitalized_words(self.sobrenome)
 
@@ -151,14 +152,15 @@ class DadosPessoais(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Dados Pessoais"
-        verbose_name_plural = "Dados Pessoais"
+        verbose_name = "Dados pessoais"
+        verbose_name_plural = "Dados pessoais"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
         return f"{self.policial.__str__()}"
 
     def clean(self):
+        super().clean()
         self.nome_guerra = get_capitalized_words(self.nome_guerra)
         self.endereco_logradouro = get_capitalized_words(self.endereco_logradouro)
         self.endereco_bairro = get_capitalized_words(self.endereco_bairro)
@@ -263,7 +265,7 @@ class DadosProfissionais(TimeStampedModel):
         verbose_name="Licenças especiais acumuladas",
     )
     afastamento = models.ForeignKey(
-        Afastamento,
+        TipoAfastamento,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -280,7 +282,7 @@ class DadosProfissionais(TimeStampedModel):
         verbose_name="Fim do afastamento",
     )
     restricao = models.ForeignKey(
-        Restricao,
+        TipoRestricao,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -297,14 +299,15 @@ class DadosProfissionais(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Dados Profissionais"
-        verbose_name_plural = "Dados Profissionais"
+        verbose_name = "Dados profissionais"
+        verbose_name_plural = "Dados profissionais"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
         return f"{self.policial.__str__()}"
 
     def clean(self):
+        super().clean()
         self.lotacao_cidade = get_capitalized_words(self.lotacao_cidade)
 
     def save(self, *args, **kwargs):
@@ -348,16 +351,16 @@ class DadosProfissionais(TimeStampedModel):
         data_hoje = timezone.now().date()
         data_ingresso = self.data_ingresso
         data_aposentadoria = None
-        servicos_anteriores = self.policial.servicoanterior_set.all()
+        trabalhos_anteriores = self.policial.trabalhoanterior_set.all()
 
         if data_ingresso >= date(2022, 1, 1):
-            for servico_anterior in servicos_anteriores:
-                if servico_anterior.tipo == TipoServicoAnterior.NENHUM:
+            for trabalho_anterior in trabalhos_anteriores:
+                if trabalho_anterior.tipo == TipoTrabalhoAnterior.NENHUM:
                     data_aposentadoria = data_ingresso + relativedelta(years=35)
                     return data_aposentadoria
 
 
-class ServicoAnterior(models.Model):
+class TrabalhoAnterior(models.Model):
     policial = models.ForeignKey(
         RegistroInicial,
         on_delete=models.CASCADE,
@@ -365,8 +368,8 @@ class ServicoAnterior(models.Model):
     )
     tipo = models.CharField(
         max_length=50,
-        choices=TipoServicoAnterior.choices,
-        default=TipoServicoAnterior.NENHUM,
+        choices=TipoTrabalhoAnterior.choices,
+        default=TipoTrabalhoAnterior.NENHUM,
         verbose_name="Tipo de serviço anterior",
     )
     tempo = models.PositiveSmallIntegerField(
@@ -375,8 +378,8 @@ class ServicoAnterior(models.Model):
     )
 
     class Meta:
-        verbose_name = "Serviço Anterior"
-        verbose_name_plural = "Serviços Anteriores"
+        verbose_name = "Trabalho anterior"
+        verbose_name_plural = "Trabalhos anteriores"
         ordering = ["policial__nome", "policial__sobrenome"]
         unique_together = ("tipo", "policial")
 
@@ -386,7 +389,8 @@ class ServicoAnterior(models.Model):
         )
 
     def clean(self):
-        if self.tipo == TipoServicoAnterior.NENHUM:
+        super().clean()
+        if self.tipo == TipoTrabalhoAnterior.NENHUM:
             self.tempo = 0
 
     def save(self, *args, **kwargs):
@@ -423,8 +427,8 @@ class FormacaoComplementar(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Formação Complementar"
-        verbose_name_plural = "Formações Complementares"
+        verbose_name = "Formação complementar"
+        verbose_name_plural = "Formação complementar"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):

@@ -54,7 +54,7 @@ class TipoSanguineo(models.TextChoices):
     O_NEGATIVO = "O-", "O-"
 
 
-class TipoServicoAnterior(models.TextChoices):
+class TipoTrabalhoAnterior(models.TextChoices):
     NENHUM = 0, "Nenhum"
     PRIVADO = 1, "Privado"
     MILITAR_FEDERAL = 2, "Militar Federal"
