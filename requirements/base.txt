@@ -1,14 +1,14 @@
 # ----------------------------------------------------------
 # Base packages
 # ----------------------------------------------------------
-django # The core Django framework
-django-environ # Used for environment variables
-django-model-utils # Used for model mixins
-django-crispy-forms # Used for crispy forms
-crispy-bootstrap5 # Used for crispy forms
-django-import-export # Used for importing and exporting data
-python-slugify # Used for slugifying
-Pillow # Used for image processing
-argon2-cffi # Used for password hashing
-python-dateutil # Used for date parsing
+django
+django-environ
+django-model-utils
+django-crispy-forms
+crispy-bootstrap5
+django-import-export
+python-slugify
+Pillow
+argon2-cffi
+python-dateutil
 # ----------------------------------------------------------
