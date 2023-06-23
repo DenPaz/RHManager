@@ -1,3 +1,5 @@
+from datetime import date
+
 from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
@@ -12,13 +14,13 @@ from ..constants import (
     TipoTrabalhoAnterior,
 )
 from ..extras.models import (
+    Afastamento,
     Curso,
     CursoCivil,
     CursoPM,
     FormacaoAcademica,
     LinguaEstrangeira,
-    TipoAfastamento,
-    TipoRestricao,
+    Restricao,
 )
 from ..utils import get_capitalized_words
 from ..validators import ValidateFillZeros, ValidateOnlyNumbers
@@ -196,7 +198,6 @@ class DadosProfissionais(TimeStampedModel):
     formacao_academica = models.ManyToManyField(
         FormacaoAcademica,
         blank=True,
-        related_name="policiais",
         verbose_name="Formação acadêmica",
     )
     data_ingresso = models.DateField(
@@ -242,16 +243,6 @@ class DadosProfissionais(TimeStampedModel):
         max_length=50,
         verbose_name="Lotação: Cidade",
     )
-    trabalho_anterior = models.CharField(
-        max_length=14,
-        choices=TipoTrabalhoAnterior.choices,
-        verbose_name="Tipo de trabalho anterior",
-    )
-    trabalho_anterior_tempo = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
-        verbose_name="Tempo de trabalho anterior (em dias)",
-    )
     comportamento = models.CharField(
         max_length=11,
         choices=Comportamento.choices,
@@ -267,12 +258,11 @@ class DadosProfissionais(TimeStampedModel):
         blank=True,
         verbose_name="Licenças especiais acumuladas",
     )
-    afastamento_tipo = models.ForeignKey(
-        TipoAfastamento,
+    afastamento = models.ForeignKey(
+        Afastamento,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name="policiais",
         verbose_name="Tipo de afastamento",
     )
     afastamento_data_inicio = models.DateField(
@@ -285,12 +275,11 @@ class DadosProfissionais(TimeStampedModel):
         null=True,
         verbose_name="Fim do afastamento",
     )
-    restricao_tipo = models.ForeignKey(
-        TipoRestricao,
+    restricao = models.ForeignKey(
+        Restricao,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name="policiais",
         verbose_name="Tipo de restrição",
     )
     restricao_data_fim = models.DateField(
@@ -317,13 +306,6 @@ class DadosProfissionais(TimeStampedModel):
         super().save(*args, **kwargs)
 
     @property
-    def tempo_servico(self):
-        today = timezone.now().date()
-        start_date = self.data_ingresso
-        diff = relativedelta(today, start_date)
-        return diff
-
-    @property
     def lotacao(self):
         params = [
             self.lotacao_regiao,
@@ -337,27 +319,68 @@ class DadosProfissionais(TimeStampedModel):
 
     @property
     def tempo_proximas_ferias(self):
-        today = timezone.now().date()
-        start_date = self.proximas_ferias
-        diff = relativedelta(start_date, today)
-        return diff
+        return relativedelta(self.proximas_ferias, timezone.now().date())
 
     @property
     def tempo_afastamento(self):
         if self.afastamento_data_inicio and self.afastamento_data_fim:
-            start_date = self.afastamento_data_inicio
-            end_date = self.afastamento_data_fim
-            diff = relativedelta(end_date, start_date)
-            return diff
+            return relativedelta(
+                self.afastamento_data_fim, self.afastamento_data_inicio
+            )
 
     @property
     def tempo_restricao(self):
         if self.restricao_data_fim:
-            today = timezone.now().date()
-            start_date = today
-            end_date = self.restricao_data_fim
-            diff = relativedelta(end_date, start_date)
-            return diff
+            return relativedelta(self.restricao_data_fim, timezone.now().date())
+
+    @property
+    def tempo_servico(self):
+        return relativedelta(timezone.now().date(), self.data_ingresso)
+
+    @property
+    def aposentadoria(self):
+        data_hoje = timezone.now().date()
+        data_ingresso = self.data_ingresso
+
+        if data_ingresso >= date(2022, 1, 1):
+            for trabalho_anterior in self.policial.trabalhoanterior_set.all():
+                if trabalho_anterior.label == TipoTrabalhoAnterior.NENHUM:
+                    return data_ingresso + relativedelta(years=35)
+
+
+class TrabalhoAnterior(models.Model):
+    policial = models.ForeignKey(
+        Registro,
+        on_delete=models.CASCADE,
+        verbose_name="Policial",
+    )
+    label = models.CharField(
+        max_length=50,
+        choices=TipoTrabalhoAnterior.choices,
+        default=TipoTrabalhoAnterior.NENHUM,
+        verbose_name="Tipo de trabalho anterior",
+    )
+    tempo = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name="Tempo de serviço no trabalho anterior (em dias)",
+    )
+
+    class Meta:
+        verbose_name = "Trabalho Anterior"
+        verbose_name_plural = "Trabalhos Anteriores"
+        ordering = ["policial__nome", "policial__sobrenome"]
+        unique_together = ("label", "policial")
+
+    def __str__(self):
+        return (
+            f"{self.policial.__str__()}: {self.get_label_display()} ({self.tempo} dias)"
+        )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        if self.label == TipoTrabalhoAnterior.NENHUM:
+            self.tempo = 0
+        super().save(*args, **kwargs)
 
 
 class FormacaoComplementar(TimeStampedModel):
@@ -370,25 +393,21 @@ class FormacaoComplementar(TimeStampedModel):
     cursos = models.ManyToManyField(
         Curso,
         blank=True,
-        related_name="policiais",
         verbose_name="Cursos",
     )
     cursos_pm = models.ManyToManyField(
         CursoPM,
         blank=True,
-        related_name="policiais",
         verbose_name="Cursos da PM",
     )
     cursos_civis = models.ManyToManyField(
         CursoCivil,
         blank=True,
-        related_name="policiais",
         verbose_name="Cursos Civis",
     )
     linguas_estrangeiras = models.ManyToManyField(
         LinguaEstrangeira,
         blank=True,
-        related_name="policiais",
         verbose_name="Línguas Estrangeiras",
     )
 

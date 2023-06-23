@@ -48,10 +48,13 @@ class Estado(models.TextChoices):
 
 
 class TipoTrabalhoAnterior(models.TextChoices):
-    NENHUM = "NENHUM", "Nenhum"
-    PRIVADO = "PRIVADO", "Privado"
-    PUBLICO_SC = "PUBLICO_SC", "Público (SC)"
-    PUBLICO_OUTROS = "PUBLICO_OUTROS", "Público (outros estados)"
+    NENHUM = 0, "Nenhum"
+    PRIVADO = 1, "Privado"
+    MILITAR_FEDERAL = 2, "Militar Federal"
+    PUBLICO_SC = 3, "Público em SC (não militar)"
+    PUBLICO_SC_MILITAR = 4, "Público em SC (militar)"
+    PUBLICO_OUTRO = 5, "Público em outro estado (não militar)"
+    PUBLICO_OUTRO_MILITAR = (6, "Público em outros estados (militar)")
 
 
 class Comportamento(models.TextChoices):

@@ -1,13 +1,13 @@
 from django.urls import path
 
-from .views import ExtraListView
+from .views import CursoView
 
 app_name = "extras"
 
 urlpatterns = [
     path(
-        route="list/",
-        view=ExtraListView.as_view(),
-        name="list",
+        route="curso/",
+        view=CursoView.as_view(),
+        name="curso",
     ),
 ]
