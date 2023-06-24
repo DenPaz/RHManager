@@ -11,7 +11,7 @@ class DadoComplementar(models.Model):
         version=4,
     )
     label = models.CharField(
-        max_length=50,
+        max_length=200,
         unique=True,
         verbose_name="Descrição",
     )
