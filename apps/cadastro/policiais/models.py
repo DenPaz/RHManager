@@ -395,7 +395,7 @@ class DadosProfissionais(TimeStampedModel):
 
         if data_ingresso <= data_limite:
             if policial_genero == Genero.MASCULINO:
-                if not t_trabalho_militar and not t_trabalho_nao_militar:
+                if not t_trabalho_nao_militar and not t_trabalho_militar:
                     pedagio += round(
                         (t_masculino_dias - (data_limite - data_ingresso).days) * taxa
                     )
@@ -403,12 +403,12 @@ class DadosProfissionais(TimeStampedModel):
                         data_hoje + t_masculino_anos - t_servico + relativedelta(days=pedagio)
                     )
                 elif t_trabalho_nao_militar and not t_trabalho_militar:
-                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                    if t_trabalho_nao_militar.days >= t_trabalho_nao_militar_max:
                         pedagio += round(
                             (
                                 t_masculino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar_max
+                                - t_trabalho_nao_militar_max
                             )
                             * taxa
                         )
@@ -424,7 +424,7 @@ class DadosProfissionais(TimeStampedModel):
                             (
                                 t_masculino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar.days
+                                - t_trabalho_nao_militar.days
                             )
                             * taxa
                         )
@@ -436,13 +436,13 @@ class DadosProfissionais(TimeStampedModel):
                             + relativedelta(days=pedagio)
                         )
                 elif t_trabalho_nao_militar and t_trabalho_militar:
-                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                    if t_trabalho_nao_militar.days >= t_trabalho_nao_militar_max:
                         pedagio += round(
                             (
                                 t_masculino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar_max
-                                + t_trabalho_militar.days
+                                - t_trabalho_nao_militar_max
+                                - t_trabalho_militar.days
                             )
                             * taxa
                         )
@@ -459,8 +459,8 @@ class DadosProfissionais(TimeStampedModel):
                             (
                                 t_masculino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar.days
-                                + t_trabalho_militar.days
+                                - t_trabalho_nao_militar.days
+                                - t_trabalho_militar.days
                             )
                             * taxa
                         )
@@ -477,7 +477,7 @@ class DadosProfissionais(TimeStampedModel):
                         (
                             t_masculino_dias
                             - (data_limite - data_ingresso).days
-                            + t_trabalho_militar.days
+                            - t_trabalho_militar.days
                         )
                         * taxa
                     )
@@ -489,18 +489,18 @@ class DadosProfissionais(TimeStampedModel):
                         + relativedelta(days=pedagio)
                     )
             elif policial_genero == Genero.FEMININO:
-                if not t_trabalho_militar and not t_trabalho_nao_militar:
+                if not t_trabalho_nao_militar and not t_trabalho_militar:
                     pedagio += round((t_feminino_dias - (data_limite - data_ingresso).days) * taxa)
                     aposentadoria = (
                         data_hoje + t_feminino_anos - t_servico + relativedelta(days=pedagio)
                     )
                 elif t_trabalho_nao_militar and not t_trabalho_militar:
-                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                    if t_trabalho_nao_militar.days >= t_trabalho_nao_militar_max:
                         pedagio += round(
                             (
                                 t_feminino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar_max
+                                - t_trabalho_nao_militar_max
                             )
                             * taxa
                         )
@@ -516,7 +516,7 @@ class DadosProfissionais(TimeStampedModel):
                             (
                                 t_feminino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar.days
+                                - t_trabalho_nao_militar.days
                             )
                             * taxa
                         )
@@ -528,13 +528,13 @@ class DadosProfissionais(TimeStampedModel):
                             + relativedelta(days=pedagio)
                         )
                 elif t_trabalho_nao_militar and t_trabalho_militar:
-                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                    if t_trabalho_nao_militar.days >= t_trabalho_nao_militar_max:
                         pedagio += round(
                             (
                                 t_feminino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar_max
-                                + t_trabalho_militar.days
+                                - t_trabalho_nao_militar_max
+                                - t_trabalho_militar.days
                             )
                             * taxa
                         )
@@ -551,8 +551,8 @@ class DadosProfissionais(TimeStampedModel):
                             (
                                 t_feminino_dias
                                 - (data_limite - data_ingresso).days
-                                + t_trabalho_nao_militar.days
-                                + t_trabalho_militar.days
+                                - t_trabalho_nao_militar.days
+                                - t_trabalho_militar.days
                             )
                             * taxa
                         )
@@ -569,7 +569,7 @@ class DadosProfissionais(TimeStampedModel):
                         (
                             t_feminino_dias
                             - (data_limite - data_ingresso).days
-                            + t_trabalho_militar.days
+                            - t_trabalho_militar.days
                         )
                         * taxa
                     )
@@ -581,12 +581,12 @@ class DadosProfissionais(TimeStampedModel):
                         + relativedelta(days=pedagio)
                     )
         elif data_ingresso > data_limite:
-            if not t_trabalho_militar and not t_trabalho_nao_militar:
+            if not t_trabalho_nao_militar and not t_trabalho_militar:
                 aposentadoria = (
                     data_hoje + t_masc_fem_anos - t_servico + relativedelta(days=pedagio)
                 )
             elif t_trabalho_nao_militar and not t_trabalho_militar:
-                if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                if t_trabalho_nao_militar.days >= t_trabalho_nao_militar_max:
                     aposentadoria = (
                         data_hoje
                         + t_masc_fem_anos
@@ -603,7 +603,7 @@ class DadosProfissionais(TimeStampedModel):
                         + relativedelta(days=pedagio)
                     )
             elif t_trabalho_nao_militar and t_trabalho_militar:
-                if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                if t_trabalho_nao_militar.days >= t_trabalho_nao_militar_max:
                     aposentadoria = (
                         data_hoje
                         + t_masc_fem_anos
@@ -631,50 +631,6 @@ class DadosProfissionais(TimeStampedModel):
                 )
 
         return aposentadoria
-
-    # @property
-    # def data_aposentadoria(self):
-    #     pedagio = 0
-    #     aposentadoria = None
-    #     data_limite = date(2021, 12, 31)
-    #     data_hoje = timezone.now().date()
-    #     data_ingresso = self.data_ingresso
-    #     policial_genero = self.policial.genero
-    #     t_servico = self.tempo_servico
-    #     t_trabalho_militar = self.tempo_trabalho_militar
-    #     t_trabalho_nao_militar = self.tempo_trabalho_nao_militar
-    #     t_trabalho_nao_militar_max = 365 * 5
-    #     taxa = 0.17
-    #     t_genero_dias = 0
-    #     t_genero_anos = relativedelta(years=0)
-
-    #     if policial_genero == Genero.MASCULINO:
-    #         t_genero_dias = 365 * 30
-    #         t_genero_anos = relativedelta(years=30)
-    #     elif policial_genero == Genero.FEMININO:
-    #         t_genero_dias = 365 * 25
-    #         t_genero_anos = relativedelta(years=25)
-
-    #     if data_ingresso <= data_limite:
-    #         pedagio += (
-    #             round(
-    #                 (t_genero_dias - (data_limite - data_ingresso).days)
-    #                 + min(t_trabalho_nao_militar.days, t_trabalho_nao_militar_max)
-    #                 + t_trabalho_militar.days
-    #             )
-    #             * taxa
-    #         )
-
-    #     aposentadoria = (
-    #         data_hoje
-    #         + t_genero_anos
-    #         - t_servico
-    #         - relativedelta(days=min(t_trabalho_nao_militar.days, t_trabalho_nao_militar_max))
-    #         - t_trabalho_militar
-    #         + relativedelta(days=pedagio)
-    #     )
-
-    #     return aposentadoria
 
 
 class TrabalhoAnterior(models.Model):
