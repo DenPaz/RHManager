@@ -333,9 +333,7 @@ class DadosProfissionais(TimeStampedModel):
     @property
     def tempo_afastamento(self):
         if self.afastamento_data_inicio and self.afastamento_data_fim:
-            return relativedelta(
-                self.afastamento_data_fim, self.afastamento_data_inicio
-            )
+            return relativedelta(self.afastamento_data_fim, self.afastamento_data_inicio)
 
     @property
     def tempo_restricao(self):
@@ -347,17 +345,151 @@ class DadosProfissionais(TimeStampedModel):
         return relativedelta(timezone.now().date(), self.data_ingresso)
 
     @property
-    def aposentadoria(self):
-        data_hoje = timezone.now().date()
-        data_ingresso = self.data_ingresso
-        data_aposentadoria = None
+    def tempo_trabalho_militar(self):
+        tempo = relativedelta()
         trabalhos_anteriores = self.policial.trabalhoanterior_set.all()
 
-        if data_ingresso >= date(2022, 1, 1):
-            for trabalho_anterior in trabalhos_anteriores:
-                if trabalho_anterior.tipo == TipoTrabalhoAnterior.NENHUM:
-                    data_aposentadoria = data_ingresso + relativedelta(years=35)
-                    return data_aposentadoria
+        for trabalho_anterior in trabalhos_anteriores:
+            if trabalho_anterior.tipo in (
+                TipoTrabalhoAnterior.MILITAR_FEDERAL,
+                TipoTrabalhoAnterior.PUBLICO_SC_MILITAR,
+                TipoTrabalhoAnterior.PUBLICO_OUTRO_MILITAR,
+            ):
+                tempo += relativedelta(days=trabalho_anterior.tempo)
+
+        return tempo
+
+    @property
+    def tempo_trabalho_nao_militar(self):
+        tempo = relativedelta()
+        trabalhos_anteriores = self.policial.trabalhoanterior_set.all()
+
+        for trabalho_anterior in trabalhos_anteriores:
+            if trabalho_anterior.tipo in (
+                TipoTrabalhoAnterior.PRIVADO,
+                TipoTrabalhoAnterior.PUBLICO_SC,
+                TipoTrabalhoAnterior.PUBLICO_OUTRO,
+            ):
+                tempo += relativedelta(days=trabalho_anterior.tempo)
+
+        return tempo
+
+    @property
+    def tempo_pedagio(self):
+        tempo = 0
+        data_limite = date(2021, 12, 31)
+        data_ingresso = self.data_ingresso
+        policial_genero = self.policial.genero
+        t_trabalho_militar = self.tempo_trabalho_militar
+        t_trabalho_nao_militar = self.tempo_trabalho_nao_militar
+        t_trabalho_nao_militar_max = 5 * 365
+        t_masculino = 30 * 365
+        t_feminino = 25 * 365
+        taxa = 0.17
+
+        if data_ingresso <= data_limite:
+            if policial_genero == Genero.MASCULINO:
+                if not t_trabalho_militar and not t_trabalho_nao_militar:
+                    tempo += round((t_masculino - (data_limite - data_ingresso).days) * taxa)
+                elif t_trabalho_nao_militar and not t_trabalho_militar:
+                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                        tempo += round(
+                            (
+                                t_masculino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar_max
+                            )
+                            * taxa
+                        )
+                    else:
+                        tempo += round(
+                            (
+                                t_masculino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar.days
+                            )
+                            * taxa
+                        )
+                elif t_trabalho_nao_militar and t_trabalho_militar:
+                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                        tempo += round(
+                            (
+                                t_masculino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar_max
+                                + t_trabalho_militar.days
+                            )
+                            * taxa
+                        )
+                    else:
+                        tempo += round(
+                            (
+                                t_masculino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar.days
+                                + t_trabalho_militar.days
+                            )
+                            * taxa
+                        )
+                elif not t_trabalho_nao_militar and t_trabalho_militar:
+                    tempo += round(
+                        (
+                            t_masculino
+                            - (data_limite - data_ingresso).days
+                            + t_trabalho_militar.days
+                        )
+                        * taxa
+                    )
+            elif policial_genero == Genero.FEMININO:
+                if not t_trabalho_militar and not t_trabalho_nao_militar:
+                    tempo += round((t_feminino - (data_limite - data_ingresso).days) * taxa)
+                elif t_trabalho_nao_militar and not t_trabalho_militar:
+                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                        tempo += round(
+                            (
+                                t_feminino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar_max
+                            )
+                            * taxa
+                        )
+                    else:
+                        tempo += round(
+                            (
+                                t_feminino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar.days
+                            )
+                            * taxa
+                        )
+                elif t_trabalho_nao_militar and t_trabalho_militar:
+                    if t_trabalho_nao_militar.days >= (t_trabalho_nao_militar_max):
+                        tempo += round(
+                            (
+                                t_feminino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar_max
+                                + t_trabalho_militar.days
+                            )
+                            * taxa
+                        )
+                    else:
+                        tempo += round(
+                            (
+                                t_feminino
+                                - (data_limite - data_ingresso).days
+                                + t_trabalho_nao_militar.days
+                                + t_trabalho_militar.days
+                            )
+                            * taxa
+                        )
+                elif not t_trabalho_nao_militar and t_trabalho_militar:
+                    tempo += round(
+                        (t_feminino - (data_limite - data_ingresso).days + t_trabalho_militar.days)
+                        * taxa
+                    )
+
+        return tempo
 
 
 class TrabalhoAnterior(models.Model):
@@ -384,9 +516,7 @@ class TrabalhoAnterior(models.Model):
         unique_together = ("tipo", "policial")
 
     def __str__(self):
-        return (
-            f"{self.policial.__str__()}: {self.get_tipo_display()} ({self.tempo} dias)"
-        )
+        return f"{self.policial.__str__()}: {self.get_tipo_display()} ({self.tempo} dias)"
 
     def clean(self):
         super().clean()
