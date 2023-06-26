@@ -49,5 +49,5 @@ admin.site.register(TrabalhoAnterior)
 class PolicialDadosProfissionaisAdmin(admin.ModelAdmin):
     list_display = (
         "__str__",
-        "tempo_pedagio",
+        "data_aposentadoria",
     )
