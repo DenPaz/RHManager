@@ -2,8 +2,7 @@
 
 <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
     <a class="navbar-brand me-lg-5" href="{% url 'dashboard:index' %}">
-        <img class="navbar-brand-dark" src="{% static 'images/logo-text-light.svg' %}">
-        <img class="navbar-brand-light" src="{% static 'images/logo-text.svg' %}">
+        <img class="navbar-brand" src="{% static 'images/logo-text-light.svg' %}">
     </a>
     <div class="d-flex align-items-center">
         <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse"
@@ -17,7 +16,7 @@
 <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
     <div class="sidebar-inner px-4 pt-3">
         <div class="user-card d-flex d-md-none justify-content-between justify-content-md-center pb-4">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mt-2">
                 <div class="avatar-lg me-4">
                     <img src="{{ request.user.get_profile_picture }}" class="card-img-top rounded-circle border-white">
                 </div>
@@ -48,15 +47,14 @@
                 </a>
             </div>
         </div>
+
         <ul class="nav flex-column pt-3 pt-md-0">
-            <li class="nav-item mb-4">
+            <li class="nav-item mb-4 mt-2">
                 <a href="{% url 'dashboard:index' %}" class="nav-link d-flex align-items-center">
                     <span class="sidebar-icon">
-                        <img src="{% static 'images/logo.svg' %}" height="30" width="30">
+                        <img src="{% static 'images/logo.svg' %}" height="45" width="45">
                     </span>
-                    <span class="mt-1 sidebar-text">
-                        RHManager
-                    </span>
+                    <span class="px-2 mt-2 sidebar-text h5"> RHManager </span>
                 </a>
             </li>
 
@@ -69,14 +67,16 @@
                             <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
                         </svg>
                     </span>
-                    <span class="sidebar-text">
-                        Dashboard
-                    </span>
+                    <span class="sidebar-text"> Dashboard </span>
                 </a>
             </li>
+
+            <li class="nav-item mt-4 mb-0"><span class="px-2  sidebar-text"> Cadastro </span></li>
+            <li role="separator" class="dropdown-divider mb-2 border-gray-700"> </li>
+
             <li class="nav-item">
                 <span class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                    data-bs-target="#submenu-cadastro">
+                    data-bs-target="#submenu-policiais">
                     <span>
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
@@ -86,9 +86,7 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="sidebar-text">
-                            Cadastro
-                        </span>
+                        <span class="sidebar-text"> Policiais </span>
                     </span>
                     <span class="link-arrow">
                         <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20"
@@ -100,41 +98,79 @@
                         </svg>
                     </span>
                 </span>
-                <div class="multi-level collapse {% if 'cadastro:policiais' in segment or 'cadastro:complementos' in segment %} show {% endif %}"
-                    role="list" id="submenu-cadastro" aria-expanded="false">
+                <div class="multi-level collapse {% if 'cadastro:policiais:' in segment %} show {% endif %}" role="list"
+                    id="submenu-policiais" aria-expanded="false">
                     <ul class="flex-column nav">
-                        <li class="nav-item {% if 'cadastro:policiais' in segment %} active {% endif %}">
-                            <a href="" class="nav-link">
-                                <span class="sidebar-text-contracted"> P </span>
-                                <span class="sidebar-text"> Policiais </span>
+                        <li class="nav-item {% if 'cadastro:policiais:list' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:policiais:list' %}" class="nav-link">
+                                <span class="sidebar-text"> Mostrar </span>
                             </a>
                         </li>
-                        <li class="nav-item {% if 'cadastro:complementos' in segment %} active {% endif %}">
+                        <li class="nav-item {% if 'cadastro:policiais:create' in segment %} active {% endif %}">
                             <a href="" class="nav-link">
-                                <span class="sidebar-text-contracted"> C </span>
-                                <span class="sidebar-text"> Complementos </span>
+                                <span class="sidebar-text"> Adicionar </span>
                             </a>
                         </li>
                     </ul>
                 </div>
             </li>
 
-            <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700">
-            </li>
-
             <li class="nav-item">
-                <a href="{% url 'authentication:logout' %}" class="nav-link d-flex align-items-center">
-                    <span class="sidebar-icon">
-                        <svg class="icon icon-xs text-danger me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                <span class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    data-bs-target="#submenu-complementos">
+                    <span>
+                        <span class="sidebar-icon">
+                            <svg class="icon icon-xs me-2" height="0.75em" fill="currentColor" viewBox="0 0 512 512"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z">
+                                </path>
+                            </svg>
+                        </span>
+
+                        <span class="sidebar-text"> Complementos </span>
+                    </span>
+                    <span class="link-arrow">
+                        <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd">
                             </path>
                         </svg>
                     </span>
-                    <span class="sidebar-text">
-                        Sair
+                </span>
+                <div class="multi-level collapse {% if 'cadastro:complementos:' in segment %} show {% endif %}"
+                    role="list" id="submenu-complementos" aria-expanded="false">
+                    <ul class="flex-column nav">
+                        <li class="nav-item {% if 'cadastro:complementos:list' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:list' %}" class="nav-link">
+                                <span class="sidebar-text"> Mostrar </span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if 'cadastro:complementos:create' in segment %} active {% endif %}">
+                            <a href="" class="nav-link">
+                                <span class="sidebar-text"> Adicionar </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item mt-4 mb-0"><span class="px-2  sidebar-text"> Relatótrios </span></li>
+            <li role="separator" class="dropdown-divider mb-2 border-gray-700"> </li>
+
+            <li class="nav-item {% if 'cadastro:aposentadoria' in segment %} active {% endif %}">
+                <a href="" class="nav-link">
+                    <span class="sidebar-icon">
+                        <svg class="icon icon-xs me-2" fill="currentColor" height="0.75em" viewBox="0 0 512 512"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z">
+                            </path>
+                        </svg>
                     </span>
+                    <span class="sidebar-text"> Aposentadoria </span>
                 </a>
             </li>
         </ul>

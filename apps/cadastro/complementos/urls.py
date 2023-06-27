@@ -1,13 +1,13 @@
 from django.urls import path
 
-from .views import CursoView
+from .views import ComplementosListView
 
 app_name = "complementos"
 
 urlpatterns = [
     path(
-        route="curso/",
-        view=CursoView.as_view(),
-        name="curso",
+        route="list/",
+        view=ComplementosListView.as_view(),
+        name="list",
     ),
 ]

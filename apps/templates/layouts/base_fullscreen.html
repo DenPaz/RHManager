@@ -1,24 +1,22 @@
 {% load static %}
 
-<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <title> RHManager | {% block title %}{% endblock %} </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
 
-    <link rel="icon" type="image/ico" href="{% static 'images/favicon.ico' %}">
-    <link type="text/css" href="{% static 'css/volt.min.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'vendor/notyf/notyf.min.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'vendor/fullcalendar/main.min.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'vendor/apexcharts/dist/apexcharts.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'vendor/dropzone/dist/min/dropzone.min.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'vendor/choices.js/public/assets/styles/choices.min.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'vendor/leaflet/dist/leaflet.css' %}" rel="stylesheet">
+    <title> RHManager | {% block title %}{% endblock %} </title>
+
+    <link href="{% static 'images/favicon.ico' %}" rel="icon">
+    <link href="{% static 'css/volt.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/notyf/notyf.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/leaflet/dist/leaflet.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/fullcalendar/main.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/apexcharts/dist/apexcharts.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/dropzone/dist/min/dropzone.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/choices.js/public/assets/styles/choices.min.css' %}" rel="stylesheet">
 
     {% block stylesheets %}
     {% endblock stylesheets %}

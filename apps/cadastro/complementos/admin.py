@@ -22,7 +22,7 @@ from .resources import (
 
 
 class DadoComplementarAdmin(ImportExportModelAdmin):
-    list_display = ("__str__",)
+    list_display = ("label",)
     search_fields = ("label",)
     ordering = ("label",)
     list_per_page = 10

@@ -43,9 +43,9 @@ DJANGO_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
@@ -54,11 +54,11 @@ THIRD_PARTY_APPS = [
     "import_export",
 ]
 LOCAL_APPS = [
-    "apps.authentication.config.AuthenticationConfig",
-    "apps.dashboard.config.DashboardConfig",
-    "apps.cadastro.config.CadastroConfig",
-    "apps.cadastro.policiais.config.PoliciaisConfig",
-    "apps.cadastro.complementos.config.ComplementosConfig",
+    "apps.authentication",
+    "apps.dashboard",
+    "apps.cadastro",
+    "apps.cadastro.policiais",
+    "apps.cadastro.complementos",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

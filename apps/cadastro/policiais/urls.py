@@ -1,13 +1,13 @@
 from django.urls import path
 
-from .views import PolicialListView
+from .views import PoliciaisListView
 
 app_name = "policiais"
 
 urlpatterns = [
     path(
         route="list/",
-        view=PolicialListView.as_view(),
+        view=PoliciaisListView.as_view(),
         name="list",
     ),
 ]
