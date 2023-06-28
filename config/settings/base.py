@@ -54,11 +54,11 @@ THIRD_PARTY_APPS = [
     "import_export",
 ]
 LOCAL_APPS = [
-    "apps.authentication",
-    "apps.dashboard",
-    "apps.cadastro",
-    "apps.cadastro.policiais",
-    "apps.cadastro.complementos",
+    "apps.authentication.config.AuthenticationConfig",
+    "apps.dashboard.config.DashboardConfig",
+    "apps.cadastro.config.CadastroConfig",
+    "apps.cadastro.policiais.config.PoliciaisConfig",
+    "apps.cadastro.complementos.config.ComplementosConfig",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
