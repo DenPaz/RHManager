@@ -2,16 +2,16 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
 from .models import (
-    DadosPessoais,
-    DadosProfissionais,
-    FormacaoComplementar,
-    RegistroInicial,
-    TrabalhoAnterior,
+    Policial,
+    PolicialDadosPessoais,
+    PolicialDadosProfissionais,
+    PolicialFormacaoComplementar,
+    PolicialTrabalhoAnterior,
 )
 from .resources import PolicialResource
 
 
-@admin.register(RegistroInicial)
+@admin.register(Policial)
 class PolicialAdmin(ImportExportModelAdmin):
     list_display = (
         "matricula",
@@ -39,13 +39,13 @@ class PolicialAdmin(ImportExportModelAdmin):
     resource_class = PolicialResource
 
 
-admin.site.register(DadosPessoais)
-admin.site.register(FormacaoComplementar)
-# admin.site.register(DadosProfissionais)
-admin.site.register(TrabalhoAnterior)
+admin.site.register(PolicialDadosPessoais)
+admin.site.register(PolicialFormacaoComplementar)
+# admin.site.register(PolicialDadosProfissionais)
+admin.site.register(PolicialTrabalhoAnterior)
 
 
-@admin.register(DadosProfissionais)
+@admin.register(PolicialDadosProfissionais)
 class PolicialDadosProfissionaisAdmin(admin.ModelAdmin):
     list_display = (
         "__str__",

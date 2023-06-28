@@ -2,11 +2,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import resolve
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from .models import DadosPessoais, RegistroInicial
+from .models import Policial, PolicialDadosPessoais
 
 
 class PoliciaisListView(LoginRequiredMixin, ListView):
-    model = RegistroInicial
+    model = Policial
     template_name = "cadastro/policiais/list.html"
     context_object_name = "policiais"
 

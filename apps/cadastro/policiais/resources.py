@@ -1,11 +1,11 @@
 from import_export import resources
 
-from .models import RegistroInicial
+from .models import Policial
 
 
 class PolicialResource(resources.ModelResource):
     class Meta:
-        model = RegistroInicial
+        model = Policial
         exclude = (
             "id",
             "created",
@@ -21,7 +21,7 @@ class PolicialResource(resources.ModelResource):
 #     def before_import(self, dataset, using_transactions, dry_run, **kwargs):
 #         required_fields = [
 #             field.name
-#             for field in RegistroInicial._meta.get_fields()
+#             for field in Policial._meta.get_fields()
 #             if (not field.null and not field.blank)
 #             and field.name not in ["created", "modified"]
 #         ]
@@ -33,7 +33,7 @@ class PolicialResource(resources.ModelResource):
 #             )
 
 #     class Meta:
-#         model = RegistroInicial
+#         model = Policial
 #         fields = None
 #         exclude = ["created", "modified"]
 

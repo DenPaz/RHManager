@@ -26,12 +26,8 @@ from ..utils import get_capitalized_words
 from ..validators import ValidateOnlyDigits
 
 
-class RegistroInicial(TimeStampedModel):
-    id = UUIDField(
-        primary_key=True,
-        editable=False,
-        version=4,
-    )
+class Policial(TimeStampedModel):
+    id = UUIDField(primary_key=True, editable=False)
     matricula = models.CharField(
         unique=True,
         max_length=6,
@@ -61,12 +57,12 @@ class RegistroInicial(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Registro inicial"
-        verbose_name_plural = "Registros iniciais"
+        verbose_name = "Policial"
+        verbose_name_plural = "Policiais"
         ordering = ["nome", "sobrenome"]
 
     def __str__(self):
-        return f"{self.nome} {self.sobrenome} ({self.matricula})"
+        return f"{self.nome_completo} ({self.matricula})"
 
     def clean(self):
         super().clean()
@@ -86,11 +82,11 @@ class RegistroInicial(TimeStampedModel):
         return f"{self.cpf[:3]}.{self.cpf[3:6]}.{self.cpf[6:9]}-{self.cpf[9:]}"
 
 
-class DadosPessoais(TimeStampedModel):
+class PolicialDadosPessoais(TimeStampedModel):
+    id = UUIDField(primary_key=True, editable=False)
     policial = models.OneToOneField(
-        RegistroInicial,
+        Policial,
         on_delete=models.CASCADE,
-        primary_key=True,
         related_name="dados_pessoais",
         verbose_name="Policial",
     )
@@ -115,34 +111,34 @@ class DadosPessoais(TimeStampedModel):
         help_text="Somente números (11 dígitos)",
     )
     email = models.EmailField(
-        verbose_name="E-mail",
         blank=True,
+        verbose_name="E-mail",
     )
     endereco_logradouro = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name="Logradouro",
+        verbose_name="Endereço - logradouro",
     )
     endereco_numero = models.CharField(
         max_length=5,
         blank=True,
-        verbose_name="Número",
+        verbose_name="Endereço - número",
     )
     endereco_bairro = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name="Bairro",
+        verbose_name="Endereço - bairro",
     )
     endereco_cidade = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name="Cidade",
+        verbose_name="Endereço - cidade",
     )
     endereco_estado = models.CharField(
         max_length=2,
         choices=Estado.choices,
         blank=True,
-        verbose_name="Estado",
+        verbose_name="Endereço - estado",
     )
     endereco_cep = models.CharField(
         max_length=8,
@@ -153,8 +149,8 @@ class DadosPessoais(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Dados pessoais"
-        verbose_name_plural = "Dados pessoais"
+        verbose_name = "Policial: dados pessoais"
+        verbose_name_plural = "Policiais: dados pessoais"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
@@ -162,11 +158,11 @@ class DadosPessoais(TimeStampedModel):
 
     def clean(self):
         super().clean()
+        self.email = self.email.lower()
         self.nome_guerra = get_capitalized_words(self.nome_guerra)
         self.endereco_logradouro = get_capitalized_words(self.endereco_logradouro)
         self.endereco_bairro = get_capitalized_words(self.endereco_bairro)
         self.endereco_cidade = get_capitalized_words(self.endereco_cidade)
-        self.email = self.email.lower()
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -192,24 +188,27 @@ class DadosPessoais(TimeStampedModel):
             self.endereco_estado,
             self.endereco_cep,
         ]
-        return ", ".join([param for param in params if param])
+        if any(params):
+            return ", ".join([param for param in params if param])
+        return None
 
 
-class DadosProfissionais(TimeStampedModel):
+class PolicialDadosProfissionais(TimeStampedModel):
+    id = UUIDField(primary_key=True, editable=False)
     policial = models.OneToOneField(
-        RegistroInicial,
+        Policial,
         on_delete=models.CASCADE,
-        primary_key=True,
         related_name="dados_profissionais",
         verbose_name="Policial",
+    )
+    data_ingresso = models.DateField(
+        verbose_name="Data de ingresso",
     )
     formacao_academica = models.ManyToManyField(
         FormacaoAcademica,
         blank=True,
+        related_name="formacoes_academicas",
         verbose_name="Formação acadêmica",
-    )
-    data_ingresso = models.DateField(
-        verbose_name="Data de ingresso",
     )
     antiguidade = models.CharField(
         max_length=5,
@@ -219,37 +218,37 @@ class DadosProfissionais(TimeStampedModel):
     )
     lotacao_regiao = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyDigits(2)],
-        verbose_name="Lotação: Região",
+        validators=[ValidateOnlyDigits()],
+        verbose_name="Lotação - região",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_batalhao = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyDigits(2)],
-        verbose_name="Lotação: Batalhão",
+        validators=[ValidateOnlyDigits()],
+        verbose_name="Lotação - batalhão",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_companhia = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyDigits(2)],
-        verbose_name="Lotação: Companhia",
+        validators=[ValidateOnlyDigits()],
+        verbose_name="Lotação - Companhia",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_pelotao = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyDigits(2)],
-        verbose_name="Lotação: Pelotão",
+        validators=[ValidateOnlyDigits()],
+        verbose_name="Lotação - pelotão",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_grupo = models.CharField(
         max_length=1,
-        validators=[ValidateOnlyDigits(1)],
-        verbose_name="Lotação: Grupo",
+        validators=[ValidateOnlyDigits()],
+        verbose_name="Lotação - grupo",
         help_text="Somente números (1 dígito)",
     )
     lotacao_cidade = models.CharField(
         max_length=50,
-        verbose_name="Lotação: Cidade",
+        verbose_name="Lotação - cidade",
     )
     comportamento = models.CharField(
         max_length=11,
@@ -269,6 +268,7 @@ class DadosProfissionais(TimeStampedModel):
     afastamento = models.ForeignKey(
         TipoAfastamento,
         on_delete=models.SET_NULL,
+        related_name="afastamentos",
         blank=True,
         null=True,
         verbose_name="Tipo de afastamento",
@@ -288,6 +288,7 @@ class DadosProfissionais(TimeStampedModel):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+        related_name="restricoes",
         verbose_name="Tipo de restrição",
     )
     restricao_data_fim = models.DateField(
@@ -301,8 +302,8 @@ class DadosProfissionais(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Dados profissionais"
-        verbose_name_plural = "Dados profissionais"
+        verbose_name = "Policial: dados profissionais"
+        verbose_name_plural = "Policiais: dados profissionais"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
@@ -312,6 +313,11 @@ class DadosProfissionais(TimeStampedModel):
         super().clean()
         self.lotacao_cidade = get_capitalized_words(self.lotacao_cidade)
         self.antiguidade = self.antiguidade.zfill(5)
+        self.lotacao_regiao = self.lotacao_regiao.zfill(2)
+        self.lotacao_batalhao = self.lotacao_batalhao.zfill(2)
+        self.lotacao_companhia = self.lotacao_companhia.zfill(2)
+        self.lotacao_pelotao = self.lotacao_pelotao.zfill(2)
+        self.lotacao_grupo = self.lotacao_grupo.zfill(1)
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -331,17 +337,21 @@ class DadosProfissionais(TimeStampedModel):
 
     @property
     def tempo_proximas_ferias(self):
-        return relativedelta(self.proximas_ferias, timezone.now().date())
+        if self.proximas_ferias:
+            return relativedelta(self.proximas_ferias, timezone.now().date())
+        return None
 
     @property
     def tempo_afastamento(self):
         if self.afastamento_data_inicio and self.afastamento_data_fim:
             return relativedelta(self.afastamento_data_fim, self.afastamento_data_inicio)
+        return None
 
     @property
     def tempo_restricao(self):
         if self.restricao_data_fim:
             return relativedelta(self.restricao_data_fim, timezone.now().date())
+        return None
 
     @property
     def tempo_servico(self):
@@ -351,7 +361,6 @@ class DadosProfissionais(TimeStampedModel):
     def tempo_trabalho_militar(self):
         tempo = relativedelta()
         trabalhos_anteriores = self.policial.trabalhos_anteriores.all()
-
         for trabalho_anterior in trabalhos_anteriores:
             if trabalho_anterior.tipo in (
                 TipoTrabalhoAnterior.MILITAR_FEDERAL,
@@ -359,14 +368,12 @@ class DadosProfissionais(TimeStampedModel):
                 TipoTrabalhoAnterior.PUBLICO_OUTRO_MILITAR,
             ):
                 tempo += relativedelta(days=trabalho_anterior.tempo)
-
         return tempo
 
     @property
     def tempo_trabalho_nao_militar(self):
         tempo = relativedelta()
         trabalhos_anteriores = self.policial.trabalhos_anteriores.all()
-
         for trabalho_anterior in trabalhos_anteriores:
             if trabalho_anterior.tipo in (
                 TipoTrabalhoAnterior.PRIVADO,
@@ -374,7 +381,6 @@ class DadosProfissionais(TimeStampedModel):
                 TipoTrabalhoAnterior.PUBLICO_OUTRO,
             ):
                 tempo += relativedelta(days=trabalho_anterior.tempo)
-
         return tempo
 
     @property
@@ -390,12 +396,11 @@ class DadosProfissionais(TimeStampedModel):
         t_trabalho_nao_militar = self.tempo_trabalho_nao_militar
         t_trabalho_nao_militar_max = 5 * 365
         t_masculino_dias = 30 * 365
-        t_masculino_anos = relativedelta(years=30)
         t_feminino_dias = 25 * 365
+        t_masculino_anos = relativedelta(years=30)
         t_feminino_anos = relativedelta(years=25)
         t_masc_fem_anos = relativedelta(years=35)
         taxa = 0.17
-
         if data_ingresso <= data_limite:
             if policial_genero == Genero.MASCULINO:
                 if not t_trabalho_nao_militar and not t_trabalho_militar:
@@ -632,13 +637,13 @@ class DadosProfissionais(TimeStampedModel):
                     - t_trabalho_militar
                     + relativedelta(days=pedagio)
                 )
-
         return aposentadoria
 
 
-class TrabalhoAnterior(models.Model):
+class PolicialTrabalhoAnterior(models.Model):
+    id = UUIDField(primary_key=True, editable=False)
     policial = models.ForeignKey(
-        RegistroInicial,
+        Policial,
         on_delete=models.CASCADE,
         related_name="trabalhos_anteriores",
         verbose_name="Policial",
@@ -646,15 +651,15 @@ class TrabalhoAnterior(models.Model):
     tipo = models.CharField(
         max_length=50,
         choices=TipoTrabalhoAnterior.choices,
-        verbose_name="Tipo de serviço anterior",
+        verbose_name="Tipo de trabalho anterior",
     )
     tempo = models.PositiveSmallIntegerField(
-        verbose_name="Tempo de serviço anterior (dias)",
+        verbose_name="Tempo de trabalho anterior (dias)",
     )
 
     class Meta:
-        verbose_name = "Trabalho anterior"
-        verbose_name_plural = "Trabalhos anteriores"
+        verbose_name = "Policial: trabalho anterior"
+        verbose_name_plural = "Policiais: trabalhos anteriores"
         ordering = ["policial__nome", "policial__sobrenome"]
         unique_together = ("tipo", "policial")
 
@@ -669,11 +674,11 @@ class TrabalhoAnterior(models.Model):
         super().save(*args, **kwargs)
 
 
-class FormacaoComplementar(TimeStampedModel):
+class PolicialFormacaoComplementar(TimeStampedModel):
+    id = UUIDField(primary_key=True, editable=False)
     policial = models.OneToOneField(
-        RegistroInicial,
+        Policial,
         on_delete=models.CASCADE,
-        primary_key=True,
         related_name="formacao_complementar",
         verbose_name="Policial",
     )
@@ -699,8 +704,8 @@ class FormacaoComplementar(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Formação complementar"
-        verbose_name_plural = "Formação complementar"
+        verbose_name = "Policial: formação complementar"
+        verbose_name_plural = "Policiais: formações complementares"
         ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
