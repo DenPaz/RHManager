@@ -25,9 +25,24 @@ def get_capitalized_words(field: str) -> str:
         "o",
         "as",
         "os",
+        "à",
+        "às",
+        "ao",
+        "aos",
+        "após",
+        "até",
+        "sob",
+        "sobre",
+        "trás",
+        "como",
+        "entre",
+        "que",
+        "se",
     }
+
     words = field.lower().split()
     capitalized_words = [
-        word.capitalize() if word not in prepositions_set else word for word in words
+        word.capitalize() if i == 0 or word not in prepositions_set else word
+        for i, word in enumerate(words)
     ]
     return " ".join(capitalized_words)

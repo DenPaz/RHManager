@@ -23,7 +23,7 @@ from ..constants import (
     TipoTrabalhoAnterior,
 )
 from ..utils import get_capitalized_words
-from ..validators import ValidateFillZeros, ValidateOnlyNumbers
+from ..validators import ValidateOnlyDigits
 
 
 class RegistroInicial(TimeStampedModel):
@@ -35,7 +35,7 @@ class RegistroInicial(TimeStampedModel):
     matricula = models.CharField(
         unique=True,
         max_length=6,
-        validators=[ValidateOnlyNumbers(6)],
+        validators=[ValidateOnlyDigits(6)],
         verbose_name="Matrícula",
         help_text="Somente números (6 dígitos)",
     )
@@ -50,7 +50,7 @@ class RegistroInicial(TimeStampedModel):
     cpf = models.CharField(
         unique=True,
         max_length=11,
-        validators=[ValidateOnlyNumbers(11)],
+        validators=[ValidateOnlyDigits(11)],
         verbose_name="CPF",
         help_text="Somente números (11 dígitos)",
     )
@@ -109,7 +109,7 @@ class DadosPessoais(TimeStampedModel):
     )
     celular = models.CharField(
         max_length=11,
-        validators=[ValidateOnlyNumbers(11)],
+        validators=[ValidateOnlyDigits(11)],
         blank=True,
         verbose_name="Número de celular",
         help_text="Somente números (11 dígitos)",
@@ -146,7 +146,7 @@ class DadosPessoais(TimeStampedModel):
     )
     endereco_cep = models.CharField(
         max_length=8,
-        validators=[ValidateOnlyNumbers(8)],
+        validators=[ValidateOnlyDigits(8)],
         blank=True,
         verbose_name="CEP",
         help_text="Somente números (8 dígitos)",
@@ -213,37 +213,37 @@ class DadosProfissionais(TimeStampedModel):
     )
     antiguidade = models.CharField(
         max_length=5,
-        validators=[ValidateFillZeros(5)],
+        validators=[ValidateOnlyDigits()],
         verbose_name="Ordem de antiguidade",
         help_text="Somente números",
     )
     lotacao_regiao = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyNumbers(2)],
+        validators=[ValidateOnlyDigits(2)],
         verbose_name="Lotação: Região",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_batalhao = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyNumbers(2)],
+        validators=[ValidateOnlyDigits(2)],
         verbose_name="Lotação: Batalhão",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_companhia = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyNumbers(2)],
+        validators=[ValidateOnlyDigits(2)],
         verbose_name="Lotação: Companhia",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_pelotao = models.CharField(
         max_length=2,
-        validators=[ValidateOnlyNumbers(2)],
+        validators=[ValidateOnlyDigits(2)],
         verbose_name="Lotação: Pelotão",
         help_text="Somente números (2 dígitos)",
     )
     lotacao_grupo = models.CharField(
         max_length=1,
-        validators=[ValidateOnlyNumbers(1)],
+        validators=[ValidateOnlyDigits(1)],
         verbose_name="Lotação: Grupo",
         help_text="Somente números (1 dígito)",
     )
@@ -311,6 +311,7 @@ class DadosProfissionais(TimeStampedModel):
     def clean(self):
         super().clean()
         self.lotacao_cidade = get_capitalized_words(self.lotacao_cidade)
+        self.antiguidade = self.antiguidade.zfill(5)
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -349,7 +350,7 @@ class DadosProfissionais(TimeStampedModel):
     @property
     def tempo_trabalho_militar(self):
         tempo = relativedelta()
-        trabalhos_anteriores = self.policial.trabalhoanterior_set.all()
+        trabalhos_anteriores = self.policial.trabalhos_anteriores.all()
 
         for trabalho_anterior in trabalhos_anteriores:
             if trabalho_anterior.tipo in (
@@ -364,7 +365,7 @@ class DadosProfissionais(TimeStampedModel):
     @property
     def tempo_trabalho_nao_militar(self):
         tempo = relativedelta()
-        trabalhos_anteriores = self.policial.trabalhoanterior_set.all()
+        trabalhos_anteriores = self.policial.trabalhos_anteriores.all()
 
         for trabalho_anterior in trabalhos_anteriores:
             if trabalho_anterior.tipo in (
@@ -645,11 +646,9 @@ class TrabalhoAnterior(models.Model):
     tipo = models.CharField(
         max_length=50,
         choices=TipoTrabalhoAnterior.choices,
-        default=TipoTrabalhoAnterior.NENHUM,
         verbose_name="Tipo de serviço anterior",
     )
     tempo = models.PositiveSmallIntegerField(
-        default=0,
         verbose_name="Tempo de serviço anterior (dias)",
     )
 
@@ -664,8 +663,6 @@ class TrabalhoAnterior(models.Model):
 
     def clean(self):
         super().clean()
-        if self.tipo == TipoTrabalhoAnterior.NENHUM:
-            self.tempo = 0
 
     def save(self, *args, **kwargs):
         self.full_clean()

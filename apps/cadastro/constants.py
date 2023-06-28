@@ -55,10 +55,9 @@ class TipoSanguineo(models.TextChoices):
 
 
 class TipoTrabalhoAnterior(models.TextChoices):
-    NENHUM = 0, "Nenhum"
     PRIVADO = 1, "Privado"
-    MILITAR_FEDERAL = 2, "Militar Federal"
+    MILITAR_FEDERAL = 2, "Federal (militar)"
     PUBLICO_SC = 3, "Público em SC (não militar)"
     PUBLICO_SC_MILITAR = 4, "Público em SC (militar)"
     PUBLICO_OUTRO = 5, "Público em outro estado (não militar)"
-    PUBLICO_OUTRO_MILITAR = (6, "Público em outros estados (militar)")
+    PUBLICO_OUTRO_MILITAR = 6, "Público em outros estados (militar)"
