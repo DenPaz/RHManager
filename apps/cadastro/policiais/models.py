@@ -91,6 +91,7 @@ class DadosPessoais(TimeStampedModel):
         RegistroInicial,
         on_delete=models.CASCADE,
         primary_key=True,
+        related_name="dados_pessoais",
         verbose_name="Policial",
     )
     nome_guerra = models.CharField(
@@ -199,6 +200,7 @@ class DadosProfissionais(TimeStampedModel):
         RegistroInicial,
         on_delete=models.CASCADE,
         primary_key=True,
+        related_name="dados_profissionais",
         verbose_name="Policial",
     )
     formacao_academica = models.ManyToManyField(
@@ -637,6 +639,7 @@ class TrabalhoAnterior(models.Model):
     policial = models.ForeignKey(
         RegistroInicial,
         on_delete=models.CASCADE,
+        related_name="trabalhos_anteriores",
         verbose_name="Policial",
     )
     tipo = models.CharField(
@@ -674,6 +677,7 @@ class FormacaoComplementar(TimeStampedModel):
         RegistroInicial,
         on_delete=models.CASCADE,
         primary_key=True,
+        related_name="formacao_complementar",
         verbose_name="Policial",
     )
     cursos = models.ManyToManyField(
