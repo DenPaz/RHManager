@@ -8,7 +8,13 @@ from .models import (
     PolicialFormacaoComplementar,
     PolicialTrabalhoAnterior,
 )
-from .resources import PolicialResource
+from .resources import (
+    PolicialDadosPessoaisResource,
+    PolicialDadosProfissionaisResource,
+    PolicialFormacaoComplementarResource,
+    PolicialResource,
+    PolicialTrabalhoAnteriorResource,
+)
 
 
 @admin.register(Policial)
@@ -39,15 +45,6 @@ class PolicialAdmin(ImportExportModelAdmin):
     resource_class = PolicialResource
 
 
-admin.site.register(PolicialDadosPessoais)
-admin.site.register(PolicialFormacaoComplementar)
-# admin.site.register(PolicialDadosProfissionais)
-admin.site.register(PolicialTrabalhoAnterior)
-
-
-@admin.register(PolicialDadosProfissionais)
-class PolicialDadosProfissionaisAdmin(admin.ModelAdmin):
-    list_display = (
-        "__str__",
-        "data_aposentadoria",
-    )
+@admin.register(PolicialDadosPessoais)
+class PolicialDadosPessoaisAdmin(ImportExportModelAdmin):
+    resource_class = PolicialDadosPessoaisResource

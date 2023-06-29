@@ -640,7 +640,7 @@ class PolicialDadosProfissionais(TimeStampedModel):
         return aposentadoria
 
 
-class PolicialTrabalhoAnterior(models.Model):
+class PolicialTrabalhoAnterior(TimeStampedModel):
     id = UUIDField(primary_key=True, editable=False)
     policial = models.ForeignKey(
         Policial,

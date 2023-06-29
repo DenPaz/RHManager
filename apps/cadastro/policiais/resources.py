@@ -1,40 +1,60 @@
-from import_export import resources
+from django.core.exceptions import ValidationError
+from import_export import fields, resources
+from import_export.widgets import ForeignKeyWidget
 
-from .models import Policial
+from .models import (
+    Policial,
+    PolicialDadosPessoais,
+    PolicialDadosProfissionais,
+    PolicialFormacaoComplementar,
+    PolicialTrabalhoAnterior,
+)
 
 
-class PolicialResource(resources.ModelResource):
+class PolicialBaseResource(resources.ModelResource):
     class Meta:
-        model = Policial
-        exclude = (
-            "id",
-            "created",
-            "modified",
-        )
-        import_id_fields = ["matricula", "cpf"]
+        exclude = ("id", "created", "modified")
         skip_unchanged = True
-        report_skipped = True
         clean_model_instances = True
 
 
-# class PolicialResource(resources.ModelResource):
-#     def before_import(self, dataset, using_transactions, dry_run, **kwargs):
-#         required_fields = [
-#             field.name
-#             for field in Policial._meta.get_fields()
-#             if (not field.null and not field.blank)
-#             and field.name not in ["created", "modified"]
-#         ]
-#         missing_fields = set(required_fields) - set(dataset.headers)
+class PolicialResource(PolicialBaseResource):
+    class Meta:
+        model = Policial
+        import_id_fields = ["matricula"]
 
-#         if missing_fields:
-#             raise ValidationError(
-#                 f"Os seguintes campos obrigatórios não foram encontrados: {missing_fields}"
-#             )
 
-#     class Meta:
-#         model = Policial
-#         fields = None
-#         exclude = ["created", "modified"]
+class PolicialForeignKeyResource(PolicialBaseResource):
+    policial = fields.Field(
+        column_name="matricula",
+        attribute="policial",
+        widget=ForeignKeyWidget(Policial, "matricula"),
+    )
 
-#         import_id_fields = ["matricula"]
+    class Meta:
+        import_id_fields = ["policial"]
+
+    def before_import_row(self, row, **kwargs):
+        matricula = row.get("matricula")
+        if not Policial.objects.filter(matricula=matricula).exists():
+            raise ValidationError(f"Policial com matrícula {matricula} não existe.")
+
+
+class PolicialDadosPessoaisResource(PolicialForeignKeyResource):
+    class Meta:
+        model = PolicialDadosPessoais
+
+
+class PolicialDadosProfissionaisResource(PolicialForeignKeyResource):
+    class Meta:
+        model = PolicialDadosProfissionais
+
+
+class PolicialFormacaoComplementarResource(PolicialForeignKeyResource):
+    class Meta:
+        model = PolicialFormacaoComplementar
+
+
+class PolicialTrabalhoAnteriorResource(PolicialForeignKeyResource):
+    class Meta:
+        model = PolicialTrabalhoAnterior
