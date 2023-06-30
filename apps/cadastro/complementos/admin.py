@@ -26,10 +26,6 @@ class DadoComplementarAdmin(ImportExportModelAdmin):
     search_fields = ("label",)
     ordering = ("label",)
     list_per_page = 10
-    resource_class = None
-
-    class Meta:
-        abstract = True
 
 
 @admin.register(TipoAfastamento)

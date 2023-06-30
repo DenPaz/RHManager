@@ -640,40 +640,6 @@ class PolicialDadosProfissionais(TimeStampedModel):
         return aposentadoria
 
 
-class PolicialTrabalhoAnterior(TimeStampedModel):
-    id = UUIDField(primary_key=True, editable=False)
-    policial = models.ForeignKey(
-        Policial,
-        on_delete=models.CASCADE,
-        related_name="trabalhos_anteriores",
-        verbose_name="Policial",
-    )
-    tipo = models.CharField(
-        max_length=50,
-        choices=TipoTrabalhoAnterior.choices,
-        verbose_name="Tipo de trabalho anterior",
-    )
-    tempo = models.PositiveSmallIntegerField(
-        verbose_name="Tempo de trabalho anterior (dias)",
-    )
-
-    class Meta:
-        verbose_name = "Policial: trabalho anterior"
-        verbose_name_plural = "Policiais: trabalhos anteriores"
-        ordering = ["policial__nome", "policial__sobrenome"]
-        unique_together = ("tipo", "policial")
-
-    def __str__(self):
-        return f"{self.policial.__str__()}: {self.get_tipo_display()} ({self.tempo} dias)"
-
-    def clean(self):
-        super().clean()
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
-
-
 class PolicialFormacaoComplementar(TimeStampedModel):
     id = UUIDField(primary_key=True, editable=False)
     policial = models.OneToOneField(
@@ -710,3 +676,37 @@ class PolicialFormacaoComplementar(TimeStampedModel):
 
     def __str__(self):
         return f"{self.policial.__str__()}"
+
+
+class PolicialTrabalhoAnterior(TimeStampedModel):
+    id = UUIDField(primary_key=True, editable=False)
+    policial = models.ForeignKey(
+        Policial,
+        on_delete=models.CASCADE,
+        related_name="trabalhos_anteriores",
+        verbose_name="Policial",
+    )
+    tipo = models.CharField(
+        max_length=50,
+        choices=TipoTrabalhoAnterior.choices,
+        verbose_name="Tipo de trabalho anterior",
+    )
+    tempo = models.PositiveSmallIntegerField(
+        verbose_name="Tempo de trabalho anterior (dias)",
+    )
+
+    class Meta:
+        verbose_name = "Policial: trabalho anterior"
+        verbose_name_plural = "Policiais: trabalhos anteriores"
+        ordering = ["policial__nome", "policial__sobrenome"]
+        unique_together = ("tipo", "policial")
+
+    def __str__(self):
+        return f"{self.policial.__str__()}: {self.get_tipo_display()} ({self.tempo} dias)"
+
+    def clean(self):
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
