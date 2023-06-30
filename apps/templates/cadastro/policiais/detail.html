@@ -1,0 +1,85 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}
+Policiais
+{% endblock title %}
+
+{% block page_description %}
+<h2 class="h4">Policial: {{ policial }}</h2>
+{% endblock page_description %}
+
+{% block content %}
+<div class="row">
+    <div class="col-6 mb-3">
+        <div class="card-body bg-white rounded shadow p-5">
+            <dl>
+                <h3 class="h4">Dados de registro:</h3>
+
+                <dt>Nome:</dt>
+                <dd>{{ policial.nome }}</dd>
+
+                <dt>Matrícula:</dt>
+                <dd>{{ policial.matricula }}</dd>
+
+                <dt>Genero:</dt>
+                <dd>{{ policial.genero }}</dd>
+
+                <dt>Tipo Sanguíneo:</dt>
+                <dd>{{ policial.dados_pessoais.tipo_sanguineo }}</dd>
+
+                <dt>CPF:</dt>
+                <dd>{{ policial.cpf }}</dd>
+
+            </dl>
+        </div>
+    </div>
+    <div class="col-6 mb-3">
+        <div class="card-body bg-white rounded shadow p-5">
+            <h3 class="h4">Dados pessoais:</h3>
+
+            <dt>Nome de guerra:</dt>
+            <dd>{{ policial.dados_pessoais.nome_guerra }}</dd>
+
+            <dt>Data de nascimento:</dt>
+            <dd>{{ policial.dados_pessoais.data_nascimento }}</dd>
+
+            <dt>Celular:</dt>
+            <dd>{{ policial.dados_pessoais.celular_formatado }}</dd>
+
+            <dt>Email:</dt>
+            <dd>{{ policial.dados_pessoais.email }}</dd>
+
+            <dt>Endereço:</dt>
+            <dd>{{ policial.dados_pessoais.endereco }}</dd>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 mb-3">
+        <div class="card-body bg-white rounded shadow p-5">
+            <h3 class="h4">Dados profissionais:</h3>
+
+            <dt>Formação acadêmica:</dt>
+            {% for formacao in policial.formacoes_academicas.all %}
+            <dd>{{ formacao }}</dd>
+            {% endfor %}
+
+
+            <dt>Data de ingresso:</dt>
+            <dd>{{ policial.dados_profissionais.data_ingresso }}</dd>
+
+            <dt>Data de aposentadoria:</dt>
+            <dd>{{ policial.dados_profissionais.data_aposentadoria }}</dd>
+
+            <dt>Trabalhos anteriores:</dt>
+            {% for trabalho_anterior in policial.trabalhos_anteriores.all %}
+            <dd>{{ trabalho_anterior.get_tipo_display }}: {{ trabalho_anterior.tempo }} dias</dd>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+<a href="{% url 'cadastro:policiais:update' policial.id %}" class="btn btn-primary">Update</a>
+<a href="{% url 'cadastro:policiais:list' %}" class="btn btn-secondary">Back</a>
+{% endblock content %}

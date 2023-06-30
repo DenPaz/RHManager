@@ -710,3 +710,6 @@ class PolicialTrabalhoAnterior(TimeStampedModel):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+    def get_tipo_display(self):
+        return TipoTrabalhoAnterior(self.tipo).label

@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Policiais
+{% endblock title %}
+
+{% block page_description %}
+<h2 class="h4"> Apagar policial: {{ policial }} </h2>
+{% endblock page_description %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p> Tem certeza que deseja continuar? </p>
+            <button type="submit" class="btn btn-danger"> Apagar </button>
+            <a href="{% url 'cadastro:policiais:list' %}" class="btn btn-secondary"> Voltar </a>
+        </form>
+    </div>
+</div>
+{% endblock content %}
