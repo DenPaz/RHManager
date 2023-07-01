@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
@@ -13,8 +12,8 @@ from .models import (
 
 class PolicialBaseResource(resources.ModelResource):
     class Meta:
-        exclude = ("id", "created", "modified")
         import_id_fields = ["matricula"]
+        exclude = ("id", "created", "modified")
         clean_model_instances = True
         skip_unchanged = True
 
@@ -23,7 +22,7 @@ class PolicialForeignKeyResource(PolicialBaseResource):
     policial = fields.Field(
         column_name="matricula",
         attribute="policial",
-        widget=ForeignKeyWidget(Policial, "matricula"),
+        widget=ForeignKeyWidget(Policial, field="matricula"),
     )
 
     class Meta(PolicialBaseResource.Meta):
@@ -31,12 +30,12 @@ class PolicialForeignKeyResource(PolicialBaseResource):
 
 
 class PolicialResource(PolicialBaseResource):
-    class Meta:
+    class Meta(PolicialBaseResource.Meta):
         model = Policial
 
 
 class PolicialDadosPessoaisResource(PolicialForeignKeyResource):
-    class Meta:
+    class Meta(PolicialForeignKeyResource.Meta):
         model = PolicialDadosPessoais
 
 
@@ -49,15 +48,15 @@ class PolicialDadosProfissionaisResource(PolicialForeignKeyResource):
     afastamento = fields.Field(
         column_name="afastamento",
         attribute="afastamento",
-        widget=ForeignKeyWidget(PolicialTrabalhoAnterior, "label"),
+        widget=ForeignKeyWidget(PolicialTrabalhoAnterior, field="label"),
     )
     restricao = fields.Field(
         column_name="restricao",
         attribute="restricao",
-        widget=ForeignKeyWidget(PolicialTrabalhoAnterior, "label"),
+        widget=ForeignKeyWidget(PolicialTrabalhoAnterior, field="label"),
     )
 
-    class Meta:
+    class Meta(PolicialForeignKeyResource.Meta):
         model = PolicialDadosProfissionais
 
 
@@ -83,11 +82,11 @@ class PolicialFormacaoComplementarResource(PolicialForeignKeyResource):
         widget=ManyToManyWidget(PolicialFormacaoComplementar, field="label"),
     )
 
-    class Meta:
+    class Meta(PolicialForeignKeyResource.Meta):
         model = PolicialFormacaoComplementar
 
 
 class PolicialTrabalhoAnteriorResource(PolicialForeignKeyResource):
-    class Meta:
+    class Meta(PolicialForeignKeyResource.Meta):
         model = PolicialTrabalhoAnterior
         import_id_fields = ["tipo"]
