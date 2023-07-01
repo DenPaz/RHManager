@@ -96,6 +96,7 @@ class PolicialDadosPessoais(TimeStampedModel):
         verbose_name="Nome de guerra",
     )
     data_nascimento = models.DateField(
+        help_text="Formato: dd/mm/aaaa",
         verbose_name="Data de nascimento",
     )
     tipo_sanguineo = models.CharField(
@@ -108,7 +109,7 @@ class PolicialDadosPessoais(TimeStampedModel):
         validators=[ValidateOnlyDigits(11)],
         blank=True,
         verbose_name="Número de celular",
-        help_text="Somente números (11 dígitos)",
+        help_text="Somente números (DDD + 9 dígitos)",
     )
     email = models.EmailField(
         blank=True,
@@ -117,28 +118,28 @@ class PolicialDadosPessoais(TimeStampedModel):
     endereco_logradouro = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name="Endereço - logradouro",
+        verbose_name="Logradouro",
     )
     endereco_numero = models.CharField(
         max_length=5,
         blank=True,
-        verbose_name="Endereço - número",
+        verbose_name="Número",
     )
     endereco_bairro = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name="Endereço - bairro",
+        verbose_name="Bairro",
     )
     endereco_cidade = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name="Endereço - cidade",
+        verbose_name="Cidade",
     )
     endereco_estado = models.CharField(
         max_length=2,
         choices=Estado.choices,
         blank=True,
-        verbose_name="Endereço - estado",
+        verbose_name="Estado",
     )
     endereco_cep = models.CharField(
         max_length=8,
@@ -202,12 +203,13 @@ class PolicialDadosProfissionais(TimeStampedModel):
         verbose_name="Policial",
     )
     data_ingresso = models.DateField(
+        help_text="Formato: dd/mm/aaaa",
         verbose_name="Data de ingresso",
     )
     formacao_academica = models.ManyToManyField(
         FormacaoAcademica,
         blank=True,
-        related_name="formacoes_academicas",
+        related_name="policiais_formacao_academica",
         verbose_name="Formação acadêmica",
     )
     antiguidade = models.CharField(
@@ -219,45 +221,46 @@ class PolicialDadosProfissionais(TimeStampedModel):
     lotacao_regiao = models.CharField(
         max_length=2,
         validators=[ValidateOnlyDigits()],
-        verbose_name="Lotação - região",
-        help_text="Somente números (2 dígitos)",
+        verbose_name="Região",
+        help_text="Somente números",
     )
     lotacao_batalhao = models.CharField(
         max_length=2,
         validators=[ValidateOnlyDigits()],
-        verbose_name="Lotação - batalhão",
-        help_text="Somente números (2 dígitos)",
+        verbose_name="Batalhão",
+        help_text="Somente números",
     )
     lotacao_companhia = models.CharField(
         max_length=2,
         validators=[ValidateOnlyDigits()],
-        verbose_name="Lotação - Companhia",
-        help_text="Somente números (2 dígitos)",
+        verbose_name="Companhia",
+        help_text="Somente números",
     )
     lotacao_pelotao = models.CharField(
         max_length=2,
         validators=[ValidateOnlyDigits()],
-        verbose_name="Lotação - pelotão",
-        help_text="Somente números (2 dígitos)",
+        verbose_name="Pelotão",
+        help_text="Somente números",
     )
     lotacao_grupo = models.CharField(
         max_length=1,
         validators=[ValidateOnlyDigits()],
-        verbose_name="Lotação - grupo",
-        help_text="Somente números (1 dígito)",
+        verbose_name="Grupo",
+        help_text="Somente números",
     )
     lotacao_cidade = models.CharField(
         max_length=50,
-        verbose_name="Lotação - cidade",
+        verbose_name="Cidade",
     )
     comportamento = models.CharField(
-        max_length=11,
+        max_length=1,
         choices=Comportamento.choices,
         verbose_name="Comportamento",
     )
     proximas_ferias = models.DateField(
         null=True,
         blank=True,
+        help_text="Formato: dd/mm/aaaa",
         verbose_name="Próximas férias",
     )
     licencas_especiais_acumuladas = models.PositiveSmallIntegerField(
@@ -268,7 +271,7 @@ class PolicialDadosProfissionais(TimeStampedModel):
     afastamento = models.ForeignKey(
         TipoAfastamento,
         on_delete=models.SET_NULL,
-        related_name="afastamentos",
+        related_name="policiais_afastamento",
         blank=True,
         null=True,
         verbose_name="Tipo de afastamento",
@@ -276,11 +279,13 @@ class PolicialDadosProfissionais(TimeStampedModel):
     afastamento_data_inicio = models.DateField(
         blank=True,
         null=True,
+        help_text="Formato: dd/mm/aaaa",
         verbose_name="Início do afastamento",
     )
     afastamento_data_fim = models.DateField(
         blank=True,
         null=True,
+        help_text="Formato: dd/mm/aaaa",
         verbose_name="Fim do afastamento",
     )
     restricao = models.ForeignKey(
@@ -288,12 +293,13 @@ class PolicialDadosProfissionais(TimeStampedModel):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name="restricoes",
+        related_name="policiais_restricao",
         verbose_name="Tipo de restrição",
     )
     restricao_data_fim = models.DateField(
         blank=True,
         null=True,
+        help_text="Formato: dd/mm/aaaa",
         verbose_name="Fim da restrição",
     )
     observacoes = models.TextField(
@@ -651,21 +657,25 @@ class PolicialFormacaoComplementar(TimeStampedModel):
     cursos = models.ManyToManyField(
         Curso,
         blank=True,
+        related_name="policiais_cursos",
         verbose_name="Cursos",
     )
     cursos_pm = models.ManyToManyField(
         CursoPM,
         blank=True,
+        related_name="policiais_cursos_pm",
         verbose_name="Cursos da PM",
     )
     cursos_civis = models.ManyToManyField(
         CursoCivil,
         blank=True,
+        related_name="policiais_cursos_civis",
         verbose_name="Cursos Civis",
     )
     linguas_estrangeiras = models.ManyToManyField(
         LinguaEstrangeira,
         blank=True,
+        related_name="policiais_linguas_estrangeiras",
         verbose_name="Línguas Estrangeiras",
     )
 
@@ -687,11 +697,11 @@ class PolicialTrabalhoAnterior(TimeStampedModel):
         verbose_name="Policial",
     )
     tipo = models.CharField(
-        max_length=50,
+        max_length=1,
         choices=TipoTrabalhoAnterior.choices,
         verbose_name="Tipo de trabalho anterior",
     )
-    tempo = models.PositiveSmallIntegerField(
+    tempo = models.PositiveIntegerField(
         verbose_name="Tempo de trabalho anterior (dias)",
     )
 
@@ -702,7 +712,7 @@ class PolicialTrabalhoAnterior(TimeStampedModel):
         unique_together = ("tipo", "policial")
 
     def __str__(self):
-        return f"{self.policial.__str__()}: {self.get_tipo_display()} ({self.tempo} dias)"
+        return f"{self.policial.__str__()}"
 
     def clean(self):
         super().clean()
@@ -710,6 +720,3 @@ class PolicialTrabalhoAnterior(TimeStampedModel):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
-
-    def get_tipo_display(self):
-        return TipoTrabalhoAnterior(self.tipo).label

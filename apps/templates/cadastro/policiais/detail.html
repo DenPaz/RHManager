@@ -61,7 +61,7 @@ Policiais
             <h3 class="h4">Dados profissionais:</h3>
 
             <dt>Formação acadêmica:</dt>
-            {% for formacao in policial.formacoes_academicas.all %}
+            {% for formacao in policial.dados_profissionais.formacao_academica.all %}
             <dd>{{ formacao }}</dd>
             {% endfor %}
 
