@@ -7,10 +7,10 @@ class Genero(models.TextChoices):
 
 
 class Comportamento(models.TextChoices):
-    EXCEPCIONAL = "EXCEPCIONAL", "Excepcional"
-    OTIMO = "OTIMO", "Ótimo"
-    BOM = "BOM", "Bom"
-    RUIM = "RUIM", "Ruim"
+    EXCEPCIONAL = 3, "Excepcional"
+    OTIMO = 2, "Ótimo"
+    BOM = 1, "Bom"
+    RUIM = 0, "Ruim"
 
 
 class Estado(models.TextChoices):

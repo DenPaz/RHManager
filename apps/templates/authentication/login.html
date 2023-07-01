@@ -23,7 +23,7 @@ Login
                         {% endfor %}
                         {% endif %}
                     </div>
-                    <form method="post" action="" class="mt-4">
+                    <form action="{% url 'authentication:login' %}" method="post" class="mt-4">
                         {% csrf_token %}
                         <div class="form-group mb-4">
                             <label for="id_username"> Usuário </label>

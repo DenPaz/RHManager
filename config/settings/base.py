@@ -36,6 +36,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # URLS
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
+DEFAULT_PROFILE_PICTURE = "images/profile_pictures/default.png"
 
 # APPS
 DJANGO_APPS = [
@@ -73,9 +74,9 @@ SESSION_COOKIE_AGE = 60 * 60 * 24
 
 # PASSWORDS
 PASSWORD_HASHERS = [
-    "django.contrib.auth.hashers.Argon2PasswordHasher",
-    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
 AUTH_PASSWORD_VALIDATORS = [

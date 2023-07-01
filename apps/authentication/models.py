@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.exceptions import ValidationError
@@ -43,6 +44,7 @@ class User(AbstractUser):
     )
     profile_picture = models.ImageField(
         upload_to="images/profile_pictures",
+        default=settings.DEFAULT_PROFILE_PICTURE,
         blank=True,
         verbose_name="Foto de perfil",
     )
@@ -82,4 +84,4 @@ class User(AbstractUser):
     def get_profile_picture(self):
         if self.profile_picture and hasattr(self.profile_picture, "url"):
             return self.profile_picture.url
-        return static("images/user.png")
+        return static(settings.DEFAULT_PROFILE_PICTURE)
