@@ -59,7 +59,6 @@ class Policial(TimeStampedModel):
     class Meta:
         verbose_name = "Policial"
         verbose_name_plural = "Policiais"
-        ordering = ["nome", "sobrenome"]
 
     def __str__(self):
         return f"{self.nome_completo} ({self.matricula})"
@@ -152,7 +151,6 @@ class PolicialDadosPessoais(TimeStampedModel):
     class Meta:
         verbose_name = "Policial: dados pessoais"
         verbose_name_plural = "Policiais: dados pessoais"
-        ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
         return f"{self.policial.__str__()}"
@@ -310,7 +308,6 @@ class PolicialDadosProfissionais(TimeStampedModel):
     class Meta:
         verbose_name = "Policial: dados profissionais"
         verbose_name_plural = "Policiais: dados profissionais"
-        ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
         return f"{self.policial.__str__()}"
@@ -682,7 +679,6 @@ class PolicialFormacaoComplementar(TimeStampedModel):
     class Meta:
         verbose_name = "Policial: formação complementar"
         verbose_name_plural = "Policiais: formações complementares"
-        ordering = ["policial__nome", "policial__sobrenome"]
 
     def __str__(self):
         return f"{self.policial.__str__()}"
@@ -708,7 +704,6 @@ class PolicialTrabalhoAnterior(TimeStampedModel):
     class Meta:
         verbose_name = "Policial: trabalho anterior"
         verbose_name_plural = "Policiais: trabalhos anteriores"
-        ordering = ["policial__nome", "policial__sobrenome"]
         unique_together = ("tipo", "policial")
 
     def __str__(self):

@@ -17,34 +17,6 @@ from .resources import (
 )
 
 
-@admin.register(Policial)
-class PolicialAdmin(ImportExportModelAdmin):
-    list_display = (
-        "matricula",
-        "nome",
-        "sobrenome",
-        "cpf_formatado",
-        "genero",
-    )
-    list_filter = ("genero",)
-    search_fields = (
-        "matricula",
-        "nome",
-        "sobrenome",
-        "cpf",
-    )
-    readonly_fields = (
-        "created",
-        "modified",
-    )
-    ordering = (
-        "nome",
-        "sobrenome",
-    )
-    list_per_page = 10
-    resource_class = PolicialResource
-
-
 class PolicialBaseAdmin(ImportExportModelAdmin):
     list_filter = ("policial__genero",)
     search_fields = (
@@ -61,6 +33,26 @@ class PolicialBaseAdmin(ImportExportModelAdmin):
     list_per_page = 10
 
 
+@admin.register(Policial)
+class PolicialAdmin(PolicialBaseAdmin):
+    list_display = (
+        "matricula",
+        "nome",
+        "sobrenome",
+        "cpf_formatado",
+        "genero",
+    )
+    list_filter = ("genero",)
+    search_fields = (
+        "matricula",
+        "nome",
+        "sobrenome",
+        "cpf",
+    )
+    ordering = ("nome", "sobrenome")
+    resource_class = PolicialResource
+
+
 @admin.register(PolicialDadosPessoais)
 class PolicialDadosPessoaisAdmin(PolicialBaseAdmin):
     list_display = (
@@ -68,8 +60,8 @@ class PolicialDadosPessoaisAdmin(PolicialBaseAdmin):
         "nome_guerra",
         "data_nascimento",
         "tipo_sanguineo",
-        "email",
         "celular_formatado",
+        "email",
         "endereco",
     )
     resource_class = PolicialDadosPessoaisResource
@@ -79,17 +71,17 @@ class PolicialDadosPessoaisAdmin(PolicialBaseAdmin):
 class PolicialDadosProfissionaisAdmin(PolicialBaseAdmin):
     list_display = (
         "policial",
+        "lotacao",
+        "antiguidade",
+        "comportamento",
         "data_ingresso",
         "data_aposentadoria",
         "proximas_ferias",
-        "antiguidade",
-        "comportamento",
         "afastamento",
         "afastamento_data_inicio",
         "afastamento_data_fim",
         "restricao",
         "restricao_data_fim",
-        "lotacao",
     )
     resource_class = PolicialDadosProfissionaisResource
 
