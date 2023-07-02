@@ -9,12 +9,12 @@ APPS_DIR = BASE_DIR / "apps"
 
 # ENVIRON
 env = environ.Env()
-READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
+READ_DOT_ENV_FILE = env.bool("READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
     environ.Env.read_env(str(BASE_DIR / ".env"))
 
 # GENERAL
-DEBUG = env.bool("DJANGO_DEBUG", False)
+DEBUG = env.bool("DEBUG", False)
 TIME_ZONE = "America/Sao_Paulo"
 LANGUAGE_CODE = "pt-br"
 USE_I18N = True
