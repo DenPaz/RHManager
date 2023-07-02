@@ -2,11 +2,18 @@ from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 from .models import (
+    Curso,
+    CursoCivil,
+    CursoPM,
+    FormacaoAcademica,
+    LinguaEstrangeira,
     Policial,
     PolicialDadosPessoais,
     PolicialDadosProfissionais,
     PolicialFormacaoComplementar,
     PolicialTrabalhoAnterior,
+    TipoAfastamento,
+    TipoRestricao,
 )
 
 
@@ -43,17 +50,17 @@ class PolicialDadosProfissionaisResource(PolicialForeignKeyResource):
     formacao_academica = fields.Field(
         column_name="formacao_academica",
         attribute="formacao_academica",
-        widget=ManyToManyWidget(PolicialFormacaoComplementar, field="label"),
+        widget=ManyToManyWidget(FormacaoAcademica, field="label"),
     )
     afastamento = fields.Field(
         column_name="afastamento",
         attribute="afastamento",
-        widget=ForeignKeyWidget(PolicialTrabalhoAnterior, field="label"),
+        widget=ForeignKeyWidget(TipoAfastamento, field="label"),
     )
     restricao = fields.Field(
         column_name="restricao",
         attribute="restricao",
-        widget=ForeignKeyWidget(PolicialTrabalhoAnterior, field="label"),
+        widget=ForeignKeyWidget(TipoRestricao, field="label"),
     )
 
     class Meta(PolicialForeignKeyResource.Meta):
@@ -64,22 +71,22 @@ class PolicialFormacaoComplementarResource(PolicialForeignKeyResource):
     cursos = fields.Field(
         column_name="cursos",
         attribute="cursos",
-        widget=ManyToManyWidget(PolicialFormacaoComplementar, field="label"),
+        widget=ManyToManyWidget(Curso, field="label"),
     )
     cursos_pm = fields.Field(
         column_name="cursos_pm",
         attribute="cursos_pm",
-        widget=ManyToManyWidget(PolicialFormacaoComplementar, field="label"),
+        widget=ManyToManyWidget(CursoPM, field="label"),
     )
     cursos_civis = fields.Field(
         column_name="cursos_civis",
         attribute="cursos_civis",
-        widget=ManyToManyWidget(PolicialFormacaoComplementar, field="label"),
+        widget=ManyToManyWidget(CursoCivil, field="label"),
     )
     linguas_estrangeiras = fields.Field(
         column_name="linguas_estrangeiras",
         attribute="linguas_estrangeiras",
-        widget=ManyToManyWidget(PolicialFormacaoComplementar, field="label"),
+        widget=ManyToManyWidget(LinguaEstrangeira, field="label"),
     )
 
     class Meta(PolicialForeignKeyResource.Meta):

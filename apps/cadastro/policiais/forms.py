@@ -16,6 +16,10 @@ class PolicialForm(ModelForm):
         exclude = ["id", "created_at", "updated_at"]
 
 
-PolicialDadosPessoaisFormSet = inlineformset_factory(
-    Policial, PolicialDadosPessoais, fields="__all__", extra=1
-)
+# PolicialDadosPessoaisFormSet = inlineformset_factory(
+#     Policial,
+#     PolicialDadosPessoais,
+#     PolicialTrabalhoAnterior,
+#     fields="__all__",
+#     extra=1,
+# )
