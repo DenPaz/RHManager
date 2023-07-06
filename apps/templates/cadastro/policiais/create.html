@@ -8,7 +8,7 @@ Policiais
 {% endblock title %}
 
 {% block page_description %}
-<h2 class="h4"> Adicionar policial </h2>
+Adicionar policial
 {% endblock page_description %}
 
 
@@ -17,7 +17,11 @@ Policiais
     <div class="col-md-6">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form|crispy }}
+            {{ policiais_form|crispy }}
+            {{ policiais_dados_pessoais_form|crispy }}
+            {{ policiais_dados_profissionais_form|crispy }}
+            {{ policiais_formacao_complementar_form|crispy }}
+            {{ policiais_trabalho_anterior_form|crispy }}
             <button type="submit" class="btn btn-primary"> Adicionar </button>
             <a href="{% url 'cadastro:policiais:list' %}" class="btn btn-secondary"> Voltar </a>
         </form>

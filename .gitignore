@@ -161,6 +161,6 @@ cython_debug/
 
 # My stuff
 media/
-0*
-
 data/
+clear.sh
+0*

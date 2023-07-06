@@ -228,6 +228,6 @@ function SaveItem(btn) {
 function SetDatePicker() {
     var datepickers = [].slice.call(d.querySelectorAll('.datepicker_input'));
     datepickers.map(function (el) {
-        return new Datepicker(el, {format: 'yyyy-mm-dd'});
+        return new Datepicker(el, {format: 'dd/mm/yyyy'});
     });
 }

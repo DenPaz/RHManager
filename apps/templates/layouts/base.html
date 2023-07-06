@@ -31,11 +31,13 @@
         {% include 'includes/navbar.html' %}
 
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-3">
-            <div class="d-block">
-                {% block page_description %}
-                {% endblock page_description %}
+            <div class="d-block mb-md-0">
+                <h2 class="h4">
+                    {% block page_description %}
+                    {% endblock page_description %}
+                </h2>
             </div>
-            <div class="d-block btn-toolbar mb-2">
+            <div class="d-block btn-toolbar mb-md-0">
                 {% block page_buttons %}
                 {% endblock page_buttons %}
             </div>

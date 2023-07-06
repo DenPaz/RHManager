@@ -97,3 +97,19 @@ class PolicialTrabalhoAnteriorResource(PolicialForeignKeyResource):
     class Meta(PolicialForeignKeyResource.Meta):
         model = PolicialTrabalhoAnterior
         import_id_fields = ["tipo"]
+
+
+# this class is used to import data from all the models
+# class PolicialMixedResource(resources.ModelResource):
+#     class Meta:
+#         model = Policial
+#         import_id_fields = ["matricula"]
+#         exclude = ("id", "created", "modified")
+#         clean_model_instances = True
+#         skip_unchanged = True
+
+#     def before_import_row(self, row, **kwargs):
+#         row["policialdadospessoais_set-0-policial"] = row["matricula"]
+#         row["policialdadosprofissionais_set-0-policial"] = row["matricula"]
+#         row["policialformacaocomplementar_set-0-policial"] = row["matricula"]
+#         row["policialtrabalhoanterior_set-0-policial"] = row["matricula"]
