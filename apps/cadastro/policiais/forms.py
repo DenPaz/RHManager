@@ -104,7 +104,3 @@ class PolicialTrabalhoAnteriorForm(forms.ModelForm):
             "tipo",
             "tempo",
         )
-
-
-class CVSUploadForm(forms.Form):
-    csv_file = forms.FileField()

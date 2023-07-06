@@ -1,12 +1,7 @@
-import csv
-from typing import Any
-
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
-from django.urls import resolve, reverse, reverse_lazy
-from django.views import View
+from django.db.models import Q
+from django.http import HttpResponse, JsonResponse
+from django.urls import resolve, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -16,28 +11,22 @@ from django.views.generic import (
 )
 
 from .forms import (
-    CVSUploadForm,
     PolicialDadosPessoaisForm,
     PolicialDadosProfissionaisForm,
     PolicialForm,
     PolicialFormacaoComplementarForm,
     PolicialTrabalhoAnteriorForm,
 )
-from .models import (
-    Policial,
-    PolicialDadosPessoais,
-    PolicialDadosProfissionais,
-    PolicialFormacaoComplementar,
-    PolicialTrabalhoAnterior,
-)
-from .resources import PolicialResource
+from .models import Policial
+from .resources import PolicialMixedExportResource
 
 
 class PoliciaisListView(LoginRequiredMixin, ListView):
     model = Policial
     template_name = "cadastro/policiais/list.html"
-    context_object_name = "policiais"
-    paginate_by = 10
+    ordering = ["nome", "sobrenome"]
+    resource_class = PolicialMixedExportResource
+    paginate_by = 9
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,44 +34,42 @@ class PoliciaisListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         search_query = self.request.GET.get("search", "")
         if search_query:
-            return Policial.objects.filter(nome__icontains=search_query)
-        return Policial.objects.all()
+            queryset = queryset.filter(
+                Q(matricula__icontains=search_query)
+                | Q(nome__icontains=search_query)
+                | Q(sobrenome__icontains=search_query)
+                | Q(cpf__icontains=search_query)
+            )
+        return queryset.order_by(*self.ordering)
 
     def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if "export_csv" in request.GET:
-            return self.export_csv(request)
-        return response
+        if request.GET.get("format"):
+            return self.export_data(request)
+        return super().get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if "import_csv" in request.POST:
-            return self.import_csv(request)
+    def export_data(self, request):
+        format_type = request.GET.get("format")
+        dataset = self.resource_class().export()
+        if format_type == "csv":
+            response = HttpResponse(content_type="text/csv")
+            response["Content-Disposition"] = 'attachment; filename="policiais.csv"'
+            response.write(dataset.csv)
+        elif format_type == "xls":
+            response = HttpResponse(content_type="application/vnd.ms-excel")
+            response["Content-Disposition"] = 'attachment; filename="policiais.xls"'
+            response.write(dataset.xls)
+        elif format_type == "xlsx":
+            response = HttpResponse(
+                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+            response["Content-Disposition"] = 'attachment; filename="policiais.xlsx"'
+            response.write(dataset.xlsx)
+        else:
+            return JsonResponse({"error": "Formato não suportado."}, status=400)
         return response
-
-    def export_csv(self, request):
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="policiais.csv"'
-        writer = csv.writer(response)
-        resource = PolicialResource()
-        fields = resource.get_fields()
-        writer.writerow([field.column_name for field in fields])
-        for policial in self.get_queryset():
-            writer.writerow(field.export(policial) for field in fields)
-        return response
-
-    def import_csv(self, request):
-        form = CVSUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            resource = PolicialResource()
-            dataset = resource.import_data(request.FILES["file"])
-            result = resource.import_data(dataset, dry_run=True)
-            if not result.has_errors():
-                resource.import_data(dataset, dry_run=False)
-                return redirect("cadastro:policiais:list")
-        return self.get(request)
 
 
 class PoliciaisCreateView(LoginRequiredMixin, CreateView):

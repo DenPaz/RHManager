@@ -6,18 +6,40 @@ Policiais
 {% endblock title %}
 
 {% block page_description %}
-Policiais
+Lista de Policiais
 {% endblock page_description %}
 
 {% block page_buttons %}
-<div class="btn-group ms-2">
-    <button type="button" id="csv-export" class="btn btn-sm btn-outline-gray-600">
-        Exportar CSV
+<div class="btn-group">
+    <button class="btn btn-sm btn-outline-gray-800 d-inline-flex align-items-center dropdown-toggle"
+        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <svg class="icon icon-xs me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z">
+            </path>
+            <path fill-rule="evenodd"
+                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                clip-rule="evenodd">
+            </path>
+        </svg>
+        Exportar
+        <svg class="icon icon-xs ms-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd">
+            </path>
+        </svg>
     </button>
+
+    <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end py-0 mt-2 text-center">
+        <a class="dropdown-item" href="{% url 'cadastro:policiais:list' %}?format=csv"> CSV </a>
+        <a class="dropdown-item" href="{% url 'cadastro:policiais:list' %}?format=xls"> XLS </a>
+        <a class="dropdown-item" href="{% url 'cadastro:policiais:list' %}?format=xlsx"> XLSX </a>
+    </div>
 </div>
-<div class="btn-group ms-2">
-    <a href="{% url 'cadastro:policiais:create' %}" class="btn btn-sm btn-gray-800 d-inline-flex align-items-center">
-        <svg class="icon icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+
+<div class="btn-group">
+    <a href="{% url 'cadastro:policiais:create' %}" class="btn btn-sm btn-primary">
+        <svg class="icon icon-xs ms-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
             </path>
@@ -29,14 +51,17 @@ Policiais
 
 {% block content %}
 <div class="table-settings mb-0">
-    <div class="row align-items-center justify-content-between">
-        <div class="col-7 col-md-6 col-lg-5 col-xl-4">
+    <div class="row align-items-center justify-content-sm-between justify-content-center">
+        <div class="col-12 col-sm-6 col-xxl-4">
             <form method="get">
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon2">
                         <span class="fas fa-search"></span>
                     </span>
                     <input type="text" name="search" class="form-control" placeholder="Pesquisar">
+                    <button class="btn btn-sm btn-secondary" href="{% url 'cadastro:policiais:list' %}">
+                        Limpar busca
+                    </button>
                 </div>
             </form>
         </div>
@@ -44,7 +69,7 @@ Policiais
 </div>
 
 <div class="card card-body border-0 shadow table-wrapper table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover align-items-center mb-2">
         <thead>
             <tr>
                 <th class="border-gray-200 text-center"> Matrícula </th>
@@ -55,25 +80,25 @@ Policiais
             </tr>
         </thead>
         <tbody>
-            {% for policial in policiais %}
+            {% for object in object_list %}
             <tr class="item-row text-center">
-                <td>{{ policial.matricula }}</td>
-                <td>{{ policial.nome }}</td>
-                <td>{{ policial.sobrenome }}</td>
-                <td>{{ policial.cpf_formatado }}</td>
+                <td>{{ object.matricula }}</td>
+                <td>{{ object.nome }}</td>
+                <td>{{ object.sobrenome }}</td>
+                <td>{{ object.cpf_formatado }}</td>
                 <td>
                     <div class="btn-group">
-                        <a class="px-2" href="{% url 'cadastro:policiais:update' policial.id %}">
-                            <span class="fas fa-edit"></span>
-                            Editar
-                        </a>
-                        <a class="px-2" href="{% url 'cadastro:policiais:detail' policial.id %}">
+                        <a class="px-1" href="{% url 'cadastro:policiais:detail' object.id %}" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Visualizar">
                             <span class="fas fa-eye mr-2"></span>
-                            Mostrar
                         </a>
-                        <a class="px-2" href="{% url 'cadastro:policiais:delete' policial.id %}">
+                        <a class="px-1" href="{% url 'cadastro:policiais:update' object.id %}" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Editar">
+                            <span class="fas fa-edit"></span>
+                        </a>
+                        <a class="px-1" href="{% url 'cadastro:policiais:delete' object.id %}" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Excluir">
                             <span class="fas fa-trash-alt"></span>
-                            Apagar
                         </a>
                     </div>
                 </td>
@@ -82,14 +107,15 @@ Policiais
         </tbody>
     </table>
 </div>
-<div class="card card-body border-0 shadow mt-2">
-    {% if policiais %}
-    <div class="card-footer px-2 border-0 d-flex flex-column flex-sm-row align-items-center justify-content-between">
-        <div class="font-weight-bold small order-1 order-sm-0 mb-3 mb-sm-0">
+
+{% if object_list %}
+<div class="card card-body border-0 p-2 shadow mt-2">
+    <div class="card-footer border-0 d-flex flex-column flex-sm-row align-items-center justify-content-between">
+        <div class="font-weight-bolder small order-1 order-sm-0 mb-sm-0 mb-3">
             Mostrando <b>{{ page_obj.start_index }}</b> a <b>{{ page_obj.end_index }}</b> de
             <b>{{ page_obj.paginator.count }}</b> resultados
         </div>
-        <ul class="pagination mb-0 ms-auto order-2 order-sm-0 mb-0">
+        <ul class="pagination order-2 order-sm-0 mb-0">
             {% if page_obj.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page={{ page_obj.previous_page_number }}"> Anterior </a>
@@ -123,20 +149,6 @@ Policiais
             {% endif %}
         </ul>
     </div>
-    {% endif %}
 </div>
-{% endblock %}
-
-{% block javascripts %}
-<script>
-    document.getElementById('csv-export').addEventListener('click', function () {
-        var searchQuery = document.querySelector('input[name="search"]').value;
-        var url = "{% url 'cadastro:policiais:list' %}";
-        var csvExportUrl = url + "?export_csv=1";
-        if (searchQuery) {
-            csvExportUrl += "&search=" + searchQuery;
-        }
-        window.location.href = csvExportUrl;
-    });
-</script>
+{% endif %}
 {% endblock %}
