@@ -2,79 +2,147 @@
 {% load static %}
 
 {% block title %}
-Complementos
+{{ page_title }}
 {% endblock title %}
 
 {% block page_description %}
-Dados complementares
+{{ page_description }}
 {% endblock page_description %}
 
+{% block page_buttons %}
+<div class="btn-group">
+    <button class="btn btn-sm btn-outline-gray-800 d-inline-flex align-items-center dropdown-toggle"
+        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <svg class="icon icon-xs me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z">
+            </path>
+            <path fill-rule="evenodd"
+                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                clip-rule="evenodd">
+            </path>
+        </svg>
+        Exportar
+        <svg class="icon icon-xs ms-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd">
+            </path>
+        </svg>
+    </button>
+
+    <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end py-0 mt-2 text-center">
+        <a class="dropdown-item" href="{{ export_url }}?format=csv"> CSV </a>
+        <a class="dropdown-item" href="{{ export_url }}?format=xls"> XLS </a>
+        <a class="dropdown-item" href="{{ export_url }}?format=xlsx"> XLSX </a>
+    </div>
+</div>
+
+<div class="btn-group">
+    <a href="{{ create_url }}" class="btn btn-sm btn-primary">
+        <svg class="icon icon-xs ms-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+            </path>
+        </svg>
+        Adicionar
+    </a>
+</div>
+{% endblock page_buttons %}
+
 {% block content %}
-<div class="row">
-    <div class="col-xl-6 mb-4">
-        <div class="card border-0 shadow">
-            <div class="card-body d-flex flex-column flex-md-row align-items-center border-bottom">
-                <div class="col-md-6">
-                    <h2 class="fs-4 fw-extrabold"> Linguas estrangeiras </h2>
+<div class="table-settings mb-0">
+    <div class="row align-items-center justify-content-sm-between justify-content-center">
+        <div class="col-12 col-sm-6 col-xxl-4">
+            <form method="get">
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon2">
+                        <span class="fas fa-search"></span>
+                    </span>
+                    <input type="text" name="search" class="form-control" placeholder="Pesquisar">
+                    <button class="btn btn-sm btn-secondary" href="{{ list_url }}">
+                        Limpar busca
+                    </button>
                 </div>
-                <div class="col-md-6 d-flex">
-                    <form action="" method="get" class="me-2">
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon2"><span class="fas fa-search"></span></span>
-                            <input type="text" name="search" class="form-control" placeholder="Search">
-                        </div>
-                    </form>
-                    <div class="dropdown">
-                        <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-1"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-xs dropdown-menu-end pb-0">
-                            <span class="small ps-3 fw-bold text-dark">Show</span>
-                            <a class="dropdown-item d-flex align-items-center fw-bold" href="#">10 <svg
-                                    class="icon icon-xxs ms-auto" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg></a>
-                            <a class="dropdown-item fw-bold" href="#">20</a>
-                            <a class="dropdown-item fw-bold rounded-bottom" href="#">30</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card card-body border-0 shadow table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="border-gray-200">Nome</th>
-                            <th class="border-gray-200">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for lingua_estrangeira in linguas_estrangeiras %}
-                        <tr class="item-row" data-edit="" data-detail="">
-                            <td><span class="font-weight-bold">{{ lingua_estrangeira.label }}</span></td>
-                            <td>
-                                <div class="btn-group">
-                                    <a class="dropdown-item edit_item" href="">
-                                        <span class="fas fa-edit mr-2"></span>Edit
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+            </form>
         </div>
     </div>
 </div>
-{% endblock content %}
+
+<div class="card card-body border-0 shadow table-wrapper table-responsive">
+    <table class="table table-hover align-items-center mb-2">
+        <thead>
+            <tr>
+                <th class="border-gray-200 text-center"> Descrição </th>
+                <th class="border-gray-200 text-center"> Ações </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for object in object_list %}
+            <tr class="item-row text-center">
+                <td>{{ object.label }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a class="px-1" href="{% url 'cadastro:policiais:detail' object.id %}" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Visualizar">
+                            <span class="fas fa-eye mr-2"></span>
+                        </a>
+                        <a class="px-1" href="{% url 'cadastro:policiais:update' object.id %}" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Editar">
+                            <span class="fas fa-edit"></span>
+                        </a>
+                        <a class="px-1" href="{% url 'cadastro:policiais:delete' object.id %}" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Excluir">
+                            <span class="fas fa-trash-alt"></span>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if object_list %}
+<div class="card card-body border-0 p-2 shadow mt-2">
+    <div class="card-footer border-0 d-flex flex-column flex-sm-row align-items-center justify-content-between">
+        <div class="font-weight-bolder small order-1 order-sm-0 mb-sm-0 mb-3">
+            Mostrando <b>{{ page_obj.start_index }}</b> a <b>{{ page_obj.end_index }}</b> de
+            <b>{{ page_obj.paginator.count }}</b> resultados
+        </div>
+        <ul class="pagination order-2 order-sm-0 mb-0">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}"> Anterior </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link"> Anterior </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}"> Próximo </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link"> Próximo </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -142,14 +142,45 @@
                 <div class="multi-level collapse {% if 'cadastro:complementos:' in segment %} show {% endif %}"
                     role="list" id="submenu-complementos" aria-expanded="false">
                     <ul class="flex-column nav">
-                        <li class="nav-item {% if 'cadastro:complementos:list' in segment %} active {% endif %}">
-                            <a href="{% url 'cadastro:complementos:list' %}" class="nav-link">
-                                <span class="sidebar-text"> Mostrar </span>
+                        <li
+                            class="nav-item {% if 'cadastro:complementos:formacao_academica' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:formacao_academica_list' %}" class="nav-link">
+                                <span class="sidebar-text"> Formações Acd. </span>
                             </a>
                         </li>
-                        <li class="nav-item {% if 'cadastro:complementos:create' in segment %} active {% endif %}">
-                            <a href="" class="nav-link">
-                                <span class="sidebar-text"> Adicionar </span>
+                    </ul>
+                    <ul class="flex-column nav">
+                        <li class="nav-item {% if 'cadastro:complementos:curso_geral' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:curso_geral_list' %}" class="nav-link">
+                                <span class="sidebar-text"> Cursos </span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if 'cadastro:complementos:curso_pm' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:curso_pm_list' %}" class="nav-link">
+                                <span class="sidebar-text"> Cursos PM </span>
+                            </a>
+                        </li>
+                        <li class="nav-item {% if 'cadastro:complementos:curso_civil' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:curso_civil_list' %}" class="nav-link">
+                                <span class="sidebar-text"> Cursos Civis </span>
+                            </a>
+                        </li>
+                        <li
+                            class="nav-item {% if 'cadastro:complementos:lingua_estrangeira' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:lingua_estrangeira_list' %}" class="nav-link">
+                                <span class="sidebar-text"> Linguas Estrang. </span>
+                            </a>
+                        </li>
+                        <li
+                            class="nav-item {% if 'cadastro:complementos:tipo_afastamento' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:tipo_afastamento_list' %}" class="nav-link">
+                                <span class="sidebar-text"> Afastamentos </span>
+                            </a>
+                        </li>
+                        <li
+                            class="nav-item {% if 'cadastro:complementos:tipo_restricao' in segment %} active {% endif %}">
+                            <a href="{% url 'cadastro:complementos:tipo_restricao_list' %}" class="nav-link">
+                                <span class="sidebar-text"> Restrições </span>
                             </a>
                         </li>
                     </ul>
