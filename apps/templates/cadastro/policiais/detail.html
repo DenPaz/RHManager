@@ -6,11 +6,11 @@ Policiais
 {% endblock title %}
 
 {% block page_description %}
-Policial: {{ policial }}
+Detalhes do policial
 {% endblock page_description %}
 
 {% block content %}
-<div class="row">
+{% comment %} <div class="row">
     <div class="col-6 mb-3">
         <div class="card-body bg-white rounded shadow p-5">
             <dl>
@@ -79,7 +79,375 @@ Policial: {{ policial }}
         </div>
     </div>
 
+</div> {% endcomment %}
+
+<div class="row justify-content-center mt-2">
+    <div class="col-12">
+        <div class="card shadow border-0 p-4 p-md-5 position-relative">
+            <div class="mb-3 d-flex align-items-center justify-content-center">
+                <h2 class="h1 mb-0">
+                    {{ policial.nome_completo }}
+                </h2>
+                <span class="badge badge-lg bg-tertiary ms-4">
+                    {{ policial.matricula }}
+                </span>
+            </div>
+            <div class="row justify-content-between mb-5">
+                <h1 class="h4 py-3">
+                    Informações de registro:
+                </h1>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Matrícula
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.matricula }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Nome completo
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.nome_completo }}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                CPF
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.cpf_formatado }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Gênero
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {% if policial.genero == 'M' %}
+                            <span class="badge badge-sm bg-info">
+                                {{ policial.get_genero_display }}
+                            </span>
+                            {% else %}
+                            <span class="badge badge-sm bg-danger">
+                                {{ policial.get_genero_display }}
+                            </span>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+                {% if  policial.dados_pessoais %}
+                <h1 class="h4 py-3">
+                    Dados pessoais:
+                </h1>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Nome de guerra
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_pessoais.nome_guerra }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Data de nascimento
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_pessoais.data_nascimento }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Tipo sanguíneo
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_pessoais.get_tipo_sanguineo_display }}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Celular
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_pessoais.celular_formatado }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Email
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_pessoais.email }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Endereço
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_pessoais.endereco }}
+                        </dd>
+                    </dl>
+                </div>
+                {% endif %}
+                {% if  policial.dados_profissionais %}
+                <h1 class="h4 py-3">
+                    Dados profissionais:
+                </h1>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Antiguidade
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.antiguidade }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Formação acadêmica
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {% for  formacao in policial.dados_profissionais.formacao_academica.all %}
+                            <div>
+                                {{ formacao.label }}
+                            </div>
+                            {% endfor %}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Lotação
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.lotacao }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Comportamento
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            <span class="badge badge-sm bg-gray-400">
+                                {{ policial.dados_profissionais.get_comportamento_display }}
+                            </span>
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Afastamento
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.afastamento }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Inicio do afastamento
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.afastamento_data_inicio }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Fim do afastamento
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.afastamento_data_fim }}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Data de ingresso
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            <span class="badge badge-sm bg-purple">
+                                {{ policial.dados_profissionais.data_ingresso }}
+                            </span>
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Data de aposentadoria
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            <span class="badge badge-sm bg-purple">
+                                {{ policial.dados_profissionais.data_aposentadoria }}
+                            </span>
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Próximas férias
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.proximas_ferias }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Licenças especiais acumuladas
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.licencas_especiais_acumuladas }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Restrição
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.restricao }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Fim da restrição
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.restricao_data_fim }}
+                        </dd>
+                        <dt class="col-6">
+                            <strong>
+                                Observações
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {{ policial.dados_profissionais.observacoes }}
+                        </dd>
+                    </dl>
+                </div>
+                {% endif %}
+                {% if  policial.formacao_complementar %}
+                <h1 class="h4 py-3">
+                    Formação complementar:
+                </h1>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Cursos gerais
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {% for curso in policial.formacao_complementar.cursos.all %}
+                            <div>
+                                {{ curso.label }}
+                            </div>
+                            {% endfor %}
+                        </dd>
+                    </dl>
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Cursos da PM
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {% for curso in policial.formacao_complementar.cursos_pm.all %}
+                            <div>
+                                {{ curso.label }}
+                            </div>
+                            {% endfor %}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Cursos civis
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {% for curso in policial.formacao_complementar.cursos_civis.all %}
+                            <div>
+                                {{ curso.label }}
+                            </div>
+                            {% endfor %}
+                        </dd>
+                    </dl>
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Linguas estrangeiras
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            {% for lingua in policial.formacao_complementar.linguas_estrangeiras.all %}
+                            <div>
+                                {{ lingua.label }}
+                            </div>
+                            {% endfor %}
+                        </dd>
+                    </dl>
+                </div>
+                {% endif %}
+                {% if  policial.trabalhos_anteriores %}
+                <h1 class="h4 py-3">
+                    Trajetória profissional:
+                </h1>
+                {% for  trabalho in policial.trabalhos_anteriores.all %}
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Tipo
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            <div>
+                                {{ trabalho.get_tipo_display }}
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-sm col-lg-5">
+                    <dl class="row text-sm-right">
+                        <dt class="col-6">
+                            <strong>
+                                Duração (em dias)
+                            </strong>
+                        </dt>
+                        <dd class="col-6">
+                            <div>
+                                {{ trabalho.tempo }}
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="justify-content-between d-flex">
+                <a href="{% url 'cadastro:policiais:list' %}" class="btn btn-secondary">Voltar</a>
+                <a href="{% url 'cadastro:policiais:update' policial.id %}" class="btn btn-primary">Atuallizar</a>
+            </div>
+        </div>
+    </div>
 </div>
-<a href="{% url 'cadastro:policiais:update' policial.id %}" class="btn btn-primary">Update</a>
-<a href="{% url 'cadastro:policiais:list' %}" class="btn btn-secondary">Back</a>
+
+
 {% endblock content %}

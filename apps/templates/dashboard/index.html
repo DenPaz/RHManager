@@ -10,4 +10,44 @@ Dashboard
 {% endblock page_description %}
 
 {% block content %}
+<div class="row">
+    <div class="col-12 col-sm-6 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <div class="row d-block d-xxl-flex align-items-center">
+                    <div class="col-12 col-xxl-6 ps-xxl-4 pe-xxl-0">
+                        <h2 class="fs-6 fw-normal mb-1 text-gray-400">
+                            Policias registrados
+                        </h2>
+                        <h3 class="fw-extrabold mb-1">
+                            {{ policiais.count }}
+                        </h3>
+                        <small class="d-flex align-items-center">
+                            {{ policiais_masculinos }} masculinos
+                        </small>
+                        <small class="d-flex align-items-center">
+                            {{ policiais_femininos }} femenios
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <div class="row d-block d-xxl-flex align-items-center">
+                    <div class="col-12 col-xxl-6 ps-xxl-4 pe-xxl-0">
+                        <h2 class="fs-6 fw-normal mb-1 text-gray-400">
+                            Policias que falam inglês
+                        </h2>
+                        <h3 class="fw-extrabold mb-1">
+                            10
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
