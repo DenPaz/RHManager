@@ -96,7 +96,6 @@ class PolicialFormacaoComplementarResource(PolicialForeignKeyResource):
 class PolicialTrabalhoAnteriorResource(PolicialForeignKeyResource):
     class Meta(PolicialForeignKeyResource.Meta):
         model = PolicialTrabalhoAnterior
-        import_id_fields = ["tipo"]
 
 
 class PolicialMixedExportResource(PolicialBaseResource):
