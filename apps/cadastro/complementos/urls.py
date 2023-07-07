@@ -2,19 +2,33 @@ from django.urls import path
 
 from .views import (
     CursoCivilCreateView,
+    CursoCivilDeleteView,
     CursoCivilListView,
+    CursoCivilUpdateView,
     CursoCreateView,
+    CursoDeleteView,
     CursoListView,
     CursoPMCreateView,
+    CursoPMDeleteView,
     CursoPMListView,
+    CursoPMUpdateView,
+    CursoUpdateView,
     FormacaoAcademicaCreateView,
+    FormacaoAcademicaDeleteView,
     FormacaoAcademicaListView,
+    FormacaoAcademicaUpdateView,
     LinguaEstrangeiraCreateView,
+    LinguaEstrangeiraDeleteView,
     LinguaEstrangeiraListView,
+    LinguaEstrangeiraUpdateView,
     TipoAfastamentoCreateView,
+    TipoAfastamentoDeleteView,
     TipoAfastamentoListView,
+    TipoAfastamentoUpdateView,
     TipoRestricaoCreateView,
+    TipoRestricaoDeleteView,
     TipoRestricaoListView,
+    TipoRestricaoUpdateView,
 )
 
 app_name = "complementos"
@@ -89,5 +103,75 @@ urlpatterns = [
         route="tipo-restricao/create/",
         view=TipoRestricaoCreateView.as_view(),
         name="tipo_restricao_create",
+    ),
+    path(
+        route="formacao-academica/update/<str:pk>/",
+        view=FormacaoAcademicaUpdateView.as_view(),
+        name="formacao_academica_update",
+    ),
+    path(
+        route="curso/update/<str:pk>/",
+        view=CursoUpdateView.as_view(),
+        name="curso_geral_update",
+    ),
+    path(
+        route="curso-pm/update/<str:pk>/",
+        view=CursoPMUpdateView.as_view(),
+        name="curso_pm_update",
+    ),
+    path(
+        route="curso-civil/update/<str:pk>/",
+        view=CursoCivilUpdateView.as_view(),
+        name="curso_civil_update",
+    ),
+    path(
+        route="lingua-estrangeira/update/<str:pk>/",
+        view=LinguaEstrangeiraUpdateView.as_view(),
+        name="lingua_estrangeira_update",
+    ),
+    path(
+        route="tipo-afastamento/update/<str:pk>/",
+        view=TipoAfastamentoUpdateView.as_view(),
+        name="tipo_afastamento_update",
+    ),
+    path(
+        route="tipo-restricao/update/<str:pk>/",
+        view=TipoRestricaoUpdateView.as_view(),
+        name="tipo_restricao_update",
+    ),
+    path(
+        route="formacao-academica/delete/<str:pk>/",
+        view=FormacaoAcademicaDeleteView.as_view(),
+        name="formacao_academica_delete",
+    ),
+    path(
+        route="curso/delete/<str:pk>/",
+        view=CursoDeleteView.as_view(),
+        name="curso_geral_delete",
+    ),
+    path(
+        route="curso-pm/delete/<str:pk>/",
+        view=CursoPMDeleteView.as_view(),
+        name="curso_pm_delete",
+    ),
+    path(
+        route="curso-civil/delete/<str:pk>/",
+        view=CursoCivilDeleteView.as_view(),
+        name="curso_civil_delete",
+    ),
+    path(
+        route="lingua-estrangeira/delete/<str:pk>/",
+        view=LinguaEstrangeiraDeleteView.as_view(),
+        name="lingua_estrangeira_delete",
+    ),
+    path(
+        route="tipo-afastamento/delete/<str:pk>/",
+        view=TipoAfastamentoDeleteView.as_view(),
+        name="tipo_afastamento_delete",
+    ),
+    path(
+        route="tipo-restricao/delete/<str:pk>/",
+        view=TipoRestricaoDeleteView.as_view(),
+        name="tipo_restricao_delete",
     ),
 ]

@@ -1,4 +1,7 @@
+import re
+
 from django.db import models
+from django.urls import reverse
 from model_utils.fields import UUIDField
 
 from ..utils import get_capitalized_words
@@ -31,6 +34,14 @@ class DadoComplementar(models.Model):
         self.full_clean()
         super().save(*args, **kwargs)
 
+    def get_update_url(self):
+        model_name = re.sub(r"([a-z])([A-Z])", r"\1_\2", self.__class__.__name__).lower()
+        return reverse(f"cadastro:complementos:{model_name}_update", kwargs={"pk": self.pk})
+
+    def get_delete_url(self):
+        model_name = re.sub(r"([a-z])([A-Z])", r"\1_\2", self.__class__.__name__).lower()
+        return reverse(f"cadastro:complementos:{model_name}_delete", kwargs={"pk": self.pk})
+
 
 class FormacaoAcademica(DadoComplementar):
     class Meta:
@@ -42,6 +53,12 @@ class Curso(DadoComplementar):
     class Meta:
         verbose_name = "Curso"
         verbose_name_plural = "Cursos"
+
+    def get_update_url(self):
+        return reverse("cadastro:complementos:curso_geral_update", kwargs={"pk": self.pk})
+
+    def get_delete_url(self):
+        return reverse("cadastro:complementos:curso_geral_delete", kwargs={"pk": self.pk})
 
 
 class CursoPM(DadoComplementar):

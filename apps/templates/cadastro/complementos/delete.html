@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ page_title }}
+{% endblock title %}
+
+{% block page_description %}
+{{ page_description }}: "{{ object }}"
+{% endblock page_description %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p> Tem certeza que deseja continuar? </p>
+            <a href="{{ list_url }}" class="btn btn-secondary"> Voltar </a>
+            <button type="submit" class="btn btn-danger"> Apagar </button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

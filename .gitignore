@@ -162,5 +162,4 @@ cython_debug/
 # My stuff
 media/
 data/
-clear.sh
 0*

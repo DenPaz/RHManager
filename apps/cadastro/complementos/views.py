@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
@@ -31,6 +32,7 @@ from .resources import (
 
 
 class DadoComplementarListView(LoginRequiredMixin, ListView):
+    model = None
     template_name = "cadastro/complementos/list.html"
     ordering = ["label"]
     paginate_by = 9
@@ -46,8 +48,6 @@ class DadoComplementarListView(LoginRequiredMixin, ListView):
         context["export_url"] = reverse(f"cadastro:complementos:{self.page_name}_list")
         context["list_url"] = reverse(f"cadastro:complementos:{self.page_name}_list")
         context["create_url"] = reverse(f"cadastro:complementos:{self.page_name}_create")
-        # context["update_url"] = reverse(f"cadastro:complementos:{self.page_name}_update")
-        # context["delete_url"] = reverse(f"cadastro:complementos:{self.page_name}_delete")
         return context
 
     def get_queryset(self):
@@ -90,6 +90,7 @@ class DadoComplementarCreateView(LoginRequiredMixin, CreateView):
     page_title = ""
     page_description = ""
     page_name = ""
+    success_message = "Adicionado com sucesso!"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,6 +100,65 @@ class DadoComplementarCreateView(LoginRequiredMixin, CreateView):
         context["page_name"] = self.page_name
         context["list_url"] = reverse(f"cadastro:complementos:{self.page_name}_list")
         return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            messages.success(self.request, self.success_message)
+        elif not form.is_valid():
+            messages.error(self.request, "Erro ao adicionar.")
+        return super().form_valid(form)
+
+
+class DadoComplementarUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = "cadastro/complementos/update.html"
+    fields = ["label"]
+    page_title = ""
+    page_description = ""
+    page_name = ""
+    success_message = "Atualizado com sucesso."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = resolve(self.request.path_info).view_name
+        context["page_title"] = self.page_title
+        context["page_description"] = self.page_description
+        context["page_name"] = self.page_name
+        context["list_url"] = reverse(f"cadastro:complementos:{self.page_name}_list")
+
+        return context
+
+    def form_valid(self, form):
+        if form.has_changed():
+            messages.success(self.request, self.success_message)
+        elif not form.has_changed():
+            messages.info(self.request, "Nenhuma alteração foi realizada.")
+        elif not form.is_valid():
+            messages.error(self.request, "Erro ao adicionar.")
+        return super().form_valid(form)
+
+
+class DadoComplementarDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = "cadastro/complementos/delete.html"
+    page_title = ""
+    page_description = ""
+    page_name = ""
+    success_message = "Excluído com sucesso."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = resolve(self.request.path_info).view_name
+        context["page_title"] = self.page_title
+        context["page_description"] = self.page_description
+        context["page_name"] = self.page_name
+        context["list_url"] = reverse(f"cadastro:complementos:{self.page_name}_list")
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            messages.success(self.request, self.success_message)
+        elif not form.is_valid():
+            messages.error(self.request, "Erro ao excluir.")
+        return super().form_valid(form)
 
 
 class FormacaoAcademicaMixin:
@@ -211,3 +271,59 @@ class TipoAfastamentoCreateView(TipoAfastamentoMixin, DadoComplementarCreateView
 
 class TipoRestricaoCreateView(TipoRestricaoMixin, DadoComplementarCreateView):
     page_description = "Cadastrar novo tipo de restrição"
+
+
+class FormacaoAcademicaUpdateView(FormacaoAcademicaMixin, DadoComplementarUpdateView):
+    page_description = "Editar formação acadêmica"
+
+
+class CursoUpdateView(CursoMixin, DadoComplementarUpdateView):
+    page_description = "Editar curso geral"
+
+
+class CursoPMUpdateView(CursoPMMixin, DadoComplementarUpdateView):
+    page_description = "Editar curso da PM"
+
+
+class CursoCivilUpdateView(CursoCivilMixin, DadoComplementarUpdateView):
+    page_description = "Editar curso civil"
+
+
+class LinguaEstrangeiraUpdateView(LinguaEstrangeiraMixin, DadoComplementarUpdateView):
+    page_description = "Editar língua estrangeira"
+
+
+class TipoAfastamentoUpdateView(TipoAfastamentoMixin, DadoComplementarUpdateView):
+    page_description = "Editar tipo de afastamento"
+
+
+class TipoRestricaoUpdateView(TipoRestricaoMixin, DadoComplementarUpdateView):
+    page_description = "Editar tipo de restrição"
+
+
+class FormacaoAcademicaDeleteView(FormacaoAcademicaMixin, DadoComplementarDeleteView):
+    page_description = "Excluir formação acadêmica"
+
+
+class CursoDeleteView(CursoMixin, DadoComplementarDeleteView):
+    page_description = "Excluir curso geral"
+
+
+class CursoPMDeleteView(CursoPMMixin, DadoComplementarDeleteView):
+    page_description = "Excluir curso da PM"
+
+
+class CursoCivilDeleteView(CursoCivilMixin, DadoComplementarDeleteView):
+    page_description = "Excluir curso civil"
+
+
+class LinguaEstrangeiraDeleteView(LinguaEstrangeiraMixin, DadoComplementarDeleteView):
+    page_description = "Excluir língua estrangeira"
+
+
+class TipoAfastamentoDeleteView(TipoAfastamentoMixin, DadoComplementarDeleteView):
+    page_description = "Excluir tipo de afastamento"
+
+
+class TipoRestricaoDeleteView(TipoRestricaoMixin, DadoComplementarDeleteView):
+    page_description = "Excluir tipo de restrição"

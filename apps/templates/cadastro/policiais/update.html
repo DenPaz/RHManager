@@ -17,9 +17,13 @@ Adicionar policial
     <div class="col-md-6">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="btn btn-primary"> Atualizar </button>
+            {{ policiais_form|crispy }}
+            {{ policiais_dados_pessoais_form|crispy }}
+            {{ policiais_dados_profissionais_form|crispy }}
+            {{ policiais_formacao_complementar_form|crispy }}
+            {{ policiais_trabalho_anterior_formset|crispy }}
             <a href="{% url 'cadastro:policiais:list' %}" class="btn btn-secondary"> Voltar </a>
+            <button type="submit" class="btn btn-primary"> Atualizar </button>
             {% if object %}
             <a href="{% url 'cadastro:policiais:delete' object.id %}" class="btn btn-danger"> Apagar </a>
             {% endif %}

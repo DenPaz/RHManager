@@ -1,5 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.urls import resolve, reverse_lazy
 from django.views.generic import (
@@ -17,7 +19,7 @@ from .forms import (
     PolicialFormacaoComplementarForm,
     PolicialTrabalhoAnteriorForm,
 )
-from .models import Policial
+from .models import Policial, PolicialTrabalhoAnterior
 from .resources import PolicialMixedExportResource
 
 
@@ -77,6 +79,7 @@ class PoliciaisCreateView(LoginRequiredMixin, CreateView):
     form_class = PolicialForm
     template_name = "cadastro/policiais/create.html"
     success_url = reverse_lazy("cadastro:policiais:list")
+    success_message = "Policial cadastrado com sucesso!"
 
     def get_context_data(self, **kwargs):
         context = super(PoliciaisCreateView, self).get_context_data(**kwargs)
@@ -103,6 +106,7 @@ class PoliciaisCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
+
         policiais_form = context["policiais_form"]
         policiais_dados_pessoais_form = context["policiais_dados_pessoais_form"]
         policiais_dados_profissionais_form = context["policiais_dados_profissionais_form"]
@@ -134,6 +138,7 @@ class PoliciaisCreateView(LoginRequiredMixin, CreateView):
             policiais_formacao_complementar.save()
             policiais_trabalho_anterior.save()
 
+            messages.success(self.request, self.success_message)
             return super().form_valid(form)
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -143,11 +148,112 @@ class PoliciaisUpdateView(LoginRequiredMixin, UpdateView):
     form_class = PolicialForm
     template_name = "cadastro/policiais/update.html"
     success_url = reverse_lazy("cadastro:policiais:list")
+    success_message = "Policial atualizado com sucesso!"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(PoliciaisUpdateView, self).get_context_data(**kwargs)
         context["segment"] = resolve(self.request.path_info).view_name
+
+        PolicialTrabalhoAnteriorFormSet = inlineformset_factory(
+            Policial,
+            PolicialTrabalhoAnterior,
+            form=PolicialTrabalhoAnteriorForm,
+            extra=1,
+            can_delete=True,
+        )
+
+        if self.request.POST:
+            context["policiais_form"] = PolicialForm(self.request.POST, instance=self.object)
+            try:
+                context["policiais_dados_pessoais_form"] = PolicialDadosPessoaisForm(
+                    self.request.POST, instance=self.object.dados_pessoais
+                )
+            except Policial.dados_pessoais.RelatedObjectDoesNotExist:
+                context["policiais_dados_pessoais_form"] = PolicialDadosPessoaisForm(
+                    self.request.POST
+                )
+            try:
+                context["policiais_dados_profissionais_form"] = PolicialDadosProfissionaisForm(
+                    self.request.POST, instance=self.object.dados_profissionais
+                )
+            except Policial.dados_profissionais.RelatedObjectDoesNotExist:
+                context["policiais_dados_profissionais_form"] = PolicialDadosProfissionaisForm(
+                    self.request.POST
+                )
+            try:
+                context["policiais_formacao_complementar_form"] = PolicialFormacaoComplementarForm(
+                    self.request.POST, instance=self.object.formacao_complementar
+                )
+            except Policial.formacao_complementar.RelatedObjectDoesNotExist:
+                context["policiais_formacao_complementar_form"] = PolicialFormacaoComplementarForm(
+                    self.request.POST
+                )
+            context["policiais_trabalho_anterior_formset"] = PolicialTrabalhoAnteriorFormSet(
+                self.request.POST, instance=self.object, prefix="trabalhos_anteriores"
+            )
+        else:
+            context["policiais_form"] = PolicialForm(instance=self.object)
+            try:
+                context["policiais_dados_pessoais_form"] = PolicialDadosPessoaisForm(
+                    instance=self.object.dados_pessoais
+                )
+            except Policial.dados_pessoais.RelatedObjectDoesNotExist:
+                context["policiais_dados_pessoais_form"] = PolicialDadosPessoaisForm()
+            try:
+                context["policiais_dados_profissionais_form"] = PolicialDadosProfissionaisForm(
+                    instance=self.object.dados_profissionais
+                )
+            except Policial.dados_profissionais.RelatedObjectDoesNotExist:
+                context["policiais_dados_profissionais_form"] = PolicialDadosProfissionaisForm()
+            try:
+                context["policiais_formacao_complementar_form"] = PolicialFormacaoComplementarForm(
+                    instance=self.object.formacao_complementar
+                )
+            except Policial.formacao_complementar.RelatedObjectDoesNotExist:
+                context[
+                    "policiais_formacao_complementar_form"
+                ] = PolicialFormacaoComplementarForm()
+
+            context["policiais_trabalho_anterior_formset"] = PolicialTrabalhoAnteriorFormSet(
+                instance=self.object, prefix="trabalhos_anteriores"
+            )
         return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        policiais_form = context["policiais_form"]
+        policiais_dados_pessoais_form = context["policiais_dados_pessoais_form"]
+        policiais_dados_profissionais_form = context["policiais_dados_profissionais_form"]
+        policiais_formacao_complementar_form = context["policiais_formacao_complementar_form"]
+        policiais_trabalho_anterior_formset = context["policiais_trabalho_anterior_formset"]
+
+        if (
+            policiais_form.is_valid()
+            and policiais_dados_pessoais_form.is_valid()
+            and policiais_dados_profissionais_form.is_valid()
+            and policiais_formacao_complementar_form.is_valid()
+            and policiais_trabalho_anterior_formset.is_valid()
+        ):
+            self.object = form.save()
+            policiais_dados_pessoais = policiais_dados_pessoais_form.save(commit=False)
+            policiais_dados_profissionais = policiais_dados_profissionais_form.save(commit=False)
+            policiais_formacao_complementar = policiais_formacao_complementar_form.save(
+                commit=False
+            )
+
+            policiais_dados_pessoais.policial = self.object
+            policiais_dados_profissionais.policial = self.object
+            policiais_formacao_complementar.policial = self.object
+
+            policiais_dados_pessoais.save()
+            policiais_dados_profissionais.save()
+            policiais_formacao_complementar.save()
+
+            policiais_trabalho_anterior_formset.save()
+
+            messages.success(self.request, self.success_message)
+            return super().form_valid(form)
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class PolicialDeleteView(LoginRequiredMixin, DeleteView):

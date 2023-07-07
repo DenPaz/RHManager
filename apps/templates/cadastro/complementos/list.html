@@ -82,15 +82,11 @@
                 <td>{{ object.label }}</td>
                 <td>
                     <div class="btn-group">
-                        <a class="px-1" href="{% url 'cadastro:policiais:detail' object.id %}" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Visualizar">
-                            <span class="fas fa-eye mr-2"></span>
-                        </a>
-                        <a class="px-1" href="{% url 'cadastro:policiais:update' object.id %}" data-bs-toggle="tooltip"
+                        <a class="px-1" href="{{ object.get_update_url }}" data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Editar">
                             <span class="fas fa-edit"></span>
                         </a>
-                        <a class="px-1" href="{% url 'cadastro:policiais:delete' object.id %}" data-bs-toggle="tooltip"
+                        <a class="px-1" href="{{ object.get_delete_url }}" data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Excluir">
                             <span class="fas fa-trash-alt"></span>
                         </a>
